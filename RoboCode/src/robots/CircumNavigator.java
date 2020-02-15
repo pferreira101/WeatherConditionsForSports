@@ -12,6 +12,7 @@ import static utils.Math.pythagorasTheorem;
 public class CircumNavigator extends AdvancedRobot {
     private boolean raceCompleted = false;
     private boolean raceOngoing = false;
+    private boolean robotScanned = false;
 
     private Odometer odometer = new Odometer("IsRacing", this);
     private CustomOdometer myOdometer;
@@ -26,21 +27,23 @@ public class CircumNavigator extends AdvancedRobot {
         // Turn to top
         turnRight(360-getRadarHeading());
 
-        // Waiting for Rockquads
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        raceOngoing = true;
+        // Start scanning robots
+        turnRight(45);
+        int i,j;
+        j = 0;
+
+        while(j<3) {
+            i = 0;
+            while(i<10 && !robotScanned) {
+                ahead(10);
+                turnRight(10);
+                i++;
+            }
+            j++;
         }
 
-        raceOngoing = true;
-
-        // Start scanning robots
-        turnRight(90);
-
-        /**while (true) {
-            circumNavigate();
-        }*/
+        goTo(18,18);
     }
 
     void circumNavigate(){
@@ -80,13 +83,10 @@ public class CircumNavigator extends AdvancedRobot {
 
     public void onScannedRobot(ScannedRobotEvent e) {
         if(raceOngoing){
-            // Stop scanning robots
-            stop();
-
-            // Go to the 1st Rockquad
-            ahead(e.getDistance()-50);
-
-            goAroundRobot();
+            robotScanned = true;
+            turnLeft(10);
+            ahead(e.getDistance()+10);
+            robotScanned = false;
         }
     }
 
@@ -101,15 +101,6 @@ public class CircumNavigator extends AdvancedRobot {
             myOdometer.registerPosition(current);
         }
     }
-
-    public void goAroundRobot(){
-        turnLeft(90);
-        for(int i=0;i<15;i++){
-            ahead(10);
-            turnRight(10);
-        }
-    }
-
 
 }
 
