@@ -34,8 +34,6 @@ public class CircumNavigator extends AdvancedRobot {
         // Start scanning robots
         turnRight(90);
 
-        System.out.println(getAllEvents());
-
         /**while (true) {
             circumNavigate();
         }*/
@@ -78,12 +76,18 @@ public class CircumNavigator extends AdvancedRobot {
             // Stop scanning robots
             stop();
 
-            // Go around the 1st Rockquad
+            // Go to the 1st Rockquad
             ahead(e.getDistance()-50);
-            turnLeft(90);
-            ahead(100);
-            turnRight(90);
-            ahead(100);
+
+            goAroundRobot();
+        }
+    }
+
+    public void goAroundRobot(){
+        turnLeft(90);
+        for(int i=0;i<15;i++){
+            ahead(10);
+            turnRight(10);
         }
     }
 
