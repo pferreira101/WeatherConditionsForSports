@@ -2,6 +2,8 @@ package robots;
 
 import robocode.*;
 import standardOdometer.Odometer;
+import utils.CustomOdometer;
+import utils.Position;
 
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 import static utils.Math.distanceBetween2Points;
@@ -12,9 +14,11 @@ public class CircumNavigator extends AdvancedRobot {
     private boolean raceOngoing = false;
 
     private Odometer odometer = new Odometer("IsRacing", this);
+    private CustomOdometer myOdometer;
 
     public void run() {
         addCustomEvent(odometer);
+        myOdometer = new CustomOdometer("customOdometer",this);
 
         // Go to bottom left corner
         goTo(18,18);
@@ -69,6 +73,9 @@ public class CircumNavigator extends AdvancedRobot {
             raceOngoing = false;
             this.odometer.getRaceDistance();
         }
+        else if (cd.getName().equals("customOdometer")){
+            System.out.println("Total " + myOdometer.getTotal());
+        }
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
@@ -83,6 +90,18 @@ public class CircumNavigator extends AdvancedRobot {
         }
     }
 
+    public void onStatus(StatusEvent event){
+        if(event == null || event.getStatus() == null){
+            System.out.println("Null Event or Status");
+            return ;
+        }
+        RobotStatus rs = event.getStatus();
+        Position current = new Position( rs.getX(), rs.getY());
+        if(myOdometer != null){
+            myOdometer.registerPosition(current);
+        }
+    }
+
     public void goAroundRobot(){
         turnLeft(90);
         for(int i=0;i<15;i++){
@@ -90,6 +109,7 @@ public class CircumNavigator extends AdvancedRobot {
             turnRight(10);
         }
     }
+
 
 }
 

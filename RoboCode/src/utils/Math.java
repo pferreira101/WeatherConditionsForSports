@@ -1,5 +1,7 @@
 package utils;
 
+import robocode.*;
+
 public class Math {
 
     public static double distanceBetween2Points(double p1x, double p1y, double p2x, double p2y){
@@ -21,4 +23,6 @@ public class Math {
 
         return acosBDegrees;
     }
+
 }
+
