@@ -1,9 +1,4 @@
 
-RoboCode/.idea/$PRODUCT_WORKSPACE_FILE$
-RoboCode/.idea/libraries/bcel_6_2.xml
-RoboCode/.idea/misc.xml
-RoboCode/.idea/modules.xml
-RoboCode/.idea/uiDesigner.xml
-RoboCode/.idea/workspace.xml
-.DS_Store
+RoboCode/.idea/*
 RoboCode/RoboCode.iml
+RoboCode/.DS_Store
