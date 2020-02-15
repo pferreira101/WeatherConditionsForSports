@@ -2,31 +2,43 @@ package robots;
 
 import robocode.*;
 import standardOdometer.Odometer;
+
 import static robocode.util.Utils.normalRelativeAngleDegrees;
-import static robocode.util.Utils.normalRelativeAngle;
-import static utils.Math.pythagorasTheorem;
 import static utils.Math.distanceBetween2Points;
+import static utils.Math.pythagorasTheorem;
 
 public class CircumNavigator extends AdvancedRobot {
     private boolean raceCompleted = false;
-    private boolean raceOngoing;
+    private boolean raceOngoing = false;
 
     private Odometer odometer = new Odometer("IsRacing", this);
 
     public void run() {
         addCustomEvent(odometer);
 
-        //Go to bottom left corner;
+        // Go to bottom left corner
         goTo(18,18);
 
-        // Turn to centre
-        turnLeft(getHeading() % 90);
+        // Turn to top
+        turnRight(360-getRadarHeading());
+
+        // Waiting for Rockquads
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         raceOngoing = true;
 
-        while (true) {
+        // Start scanning robots
+        turnRight(90);
+
+        System.out.println(getAllEvents());
+
+        /**while (true) {
             circumNavigate();
-        }
+        }*/
     }
 
     void circumNavigate(){
@@ -56,7 +68,22 @@ public class CircumNavigator extends AdvancedRobot {
         Condition cd = ev.getCondition();
         if (cd.getName().equals("IsRacing")) {
             raceCompleted = true;
+            raceOngoing = false;
             this.odometer.getRaceDistance();
+        }
+    }
+
+    public void onScannedRobot(ScannedRobotEvent e) {
+        if(raceOngoing){
+            // Stop scanning robots
+            stop();
+
+            // Go around the 1st Rockquad
+            ahead(e.getDistance()-50);
+            turnLeft(90);
+            ahead(100);
+            turnRight(90);
+            ahead(100);
         }
     }
 
