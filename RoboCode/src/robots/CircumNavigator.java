@@ -34,7 +34,7 @@ public class CircumNavigator extends AdvancedRobot {
         j = 0;
 
         while(j<3) {
-            i = 0;
+            i=0;
             while(i<10 && !robotScanned) {
                 ahead(10);
                 turnRight(10);
@@ -84,8 +84,9 @@ public class CircumNavigator extends AdvancedRobot {
     public void onScannedRobot(ScannedRobotEvent e) {
         if(raceOngoing){
             robotScanned = true;
-            turnLeft(10);
-            ahead(e.getDistance()+10);
+            double degreesToTurn = Math.toDegrees(Math.asin(120.0/e.getDistance()));
+            turnLeft(degreesToTurn);
+            ahead(e.getDistance());
             robotScanned = false;
         }
     }
