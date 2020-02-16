@@ -31,25 +31,31 @@ public class CircumNavigator extends AdvancedRobot {
         if(myOdometer.getPositions().contains(myOdometer.getStartingPoint()))
             raceOngoing = true;
 
-        if(raceOngoing = true) {
-            // Start scanning robots
-            turnRadarRight(45);
-            turnRadarLeft(45);
-            int i, j;
-            j = 0;
-
-            while (j < 3) {
-                i = 0;
-                while (i < 10 && !robotScanned) {
-                    ahead(10);
-                    turnRight(10);
-                    i++;
-                }
+        // Start scanning robots
+        int j = 0;
+        while(j<3) { // 3 robots => 3 scans
+            if(!robotScanned) {
+                // Scanning to the right side
+                turnRadarRight(45);
                 j++;
             }
-
-            goTo(18, 18);
         }
+
+        goTo(18, 18);
+    }
+
+    public void goAroundRobot(){
+        turnLeft(90);
+
+        // Start turns
+        for(int i=0;i<3;i++){
+            ahead(40);
+            turnRight(45);
+        }
+
+        // Last turn more safely (for the radar catch the next robot)
+        ahead(50);
+        turnRight(15);
     }
 
     void goTo(double toX, double toY){
@@ -82,11 +88,24 @@ public class CircumNavigator extends AdvancedRobot {
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        if(raceOngoing){
+        if(raceOngoing && !robotScanned){
             robotScanned = true;
-            double degreesToTurn = e.getBearing()-10;
+
+            // Place the radar normally
+            turnRadarLeft(45);
+
+            // Angle to the next robot
+            double degreesToTurn = e.getBearing();
+
+            // Turn to the next robot
             turnRight(degreesToTurn);
-            ahead(e.getDistance());
+
+            // Go ahead and stop just before
+            ahead(e.getDistance()-50);
+
+            // Go around the robot
+            goAroundRobot();
+
             robotScanned = false;
         }
     }
