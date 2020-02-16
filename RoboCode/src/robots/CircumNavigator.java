@@ -27,29 +27,27 @@ public class CircumNavigator extends AdvancedRobot {
         // Turn to top
         turnRight(360-getRadarHeading());
 
-        raceOngoing = true;
-        // Start scanning robots
-        turnRight(45);
-        int i,j;
-        j = 0;
+        // Check robot in starting point
+        if(myOdometer.getPositions().contains(myOdometer.getStartingPoint()))
+            raceOngoing = true;
 
-        while(j<3) {
-            i=0;
-            while(i<10 && !robotScanned) {
-                ahead(10);
-                turnRight(10);
-                i++;
+        if(raceOngoing = true) {
+            // Start scanning robots
+            turnRight(45);
+            int i, j;
+            j = 0;
+
+            while (j < 3) {
+                i = 0;
+                while (i < 10 && !robotScanned) {
+                    ahead(10);
+                    turnRight(10);
+                    i++;
+                }
+                j++;
             }
-            j++;
-        }
 
-        goTo(18,18);
-    }
-
-    void circumNavigate(){
-        if(!raceCompleted){
-            ahead(5000);
-            turnRight(90);
+            goTo(18, 18);
         }
     }
 
@@ -57,6 +55,7 @@ public class CircumNavigator extends AdvancedRobot {
         double fromX = getX();
         double fromY = getY();
         double distance =  distanceBetween2Points(fromX, fromY, toX, toY);
+
         // Pythagoras theorem to calculate the complementary angel
         double complementaryAngle = pythagorasTheorem(fromX, fromY, toX, toY);
 
@@ -88,6 +87,15 @@ public class CircumNavigator extends AdvancedRobot {
             turnLeft(degreesToTurn);
             ahead(e.getDistance());
             robotScanned = false;
+        }
+    }
+
+    public void onHitRobot(HitRobotEvent e){
+        if(!raceOngoing){
+            back(50);
+            turnLeft(30);
+            ahead(50);
+            goTo(18,18);
         }
     }
 

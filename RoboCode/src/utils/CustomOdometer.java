@@ -59,4 +59,12 @@ public class CustomOdometer {
     public double getTotal(){
         return  totalDistance;
     }
+
+    public List<Position> getPositions(){
+        return  positions;
+    }
+
+    public Position getStartingPoint(){
+        return  startingPoint;
+    }
 }
