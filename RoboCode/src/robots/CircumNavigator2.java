@@ -4,17 +4,18 @@ import robocode.*;
 import standardOdometer.Odometer;
 import utils.CustomOdometer;
 import utils.Position;
-import java.awt.Color;
-import java.awt.Graphics2D;
+
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 import static utils.Math.distanceBetween2Points;
 import static utils.Math.pythagorasTheorem;
 
-public class CircumNavigator extends AdvancedRobot {
+public class CircumNavigator2 extends AdvancedRobot {
     private boolean raceCompleted = false;
     private boolean raceOngoing = false;
     private boolean robotScanned = false;
     private boolean totalDisplayed = false;
+    private int robot = 1;
+
     private Odometer odometer = new Odometer("IsRacing", this);
     private CustomOdometer myOdometer;
 
@@ -46,17 +47,12 @@ public class CircumNavigator extends AdvancedRobot {
     }
 
     public void goAroundRobot(){
-        turnLeft(90);
 
         // Start turns
-        for(int i=0;i<48;i++){
-            ahead(2.5);
-            turnRight(2.8125);
+        for(int i=0;i<6;i++){
+            ahead(10);
+            turnRight(11.125);
         }
-
-        // Last turn more safely (for the radar catch the next robot)
-        ahead(10);
-        turnRight(15);
     }
 
     void goTo(double toX, double toY){
@@ -92,21 +88,36 @@ public class CircumNavigator extends AdvancedRobot {
         }
     }
 
+
     public void onScannedRobot(ScannedRobotEvent e) {
         if(raceOngoing && !robotScanned){
             robotScanned = true;
-
             // Place the radar normally
             turnRadarLeft(45);
 
             // Angle to the next robot
-            double degreesToTurn = e.getBearing();
+            double degreesToTurn;
+
+            if(robot==1) {
+                if(e.getBearing()>=0)
+                    degreesToTurn = e.getBearing()-5;
+                else
+                    degreesToTurn = e.getBearing()+5;
+            }
+            else {
+                if(e.getBearing()>=0)
+                    degreesToTurn = e.getBearing()-10;
+                else
+                    degreesToTurn = e.getBearing()+10;
+            }
+
+            robot++;
 
             // Turn to the next robot
             turnRight(degreesToTurn);
 
             // Go ahead and stop just before
-            ahead(e.getDistance()-50);
+            ahead(e.getDistance());
 
             // Go around the robot
             goAroundRobot();
@@ -136,5 +147,6 @@ public class CircumNavigator extends AdvancedRobot {
         }
 
     }
+
 }
 

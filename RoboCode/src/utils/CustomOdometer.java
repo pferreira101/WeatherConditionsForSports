@@ -1,7 +1,6 @@
 package utils;
 
-import robocode.AdvancedRobot;
-import robocode.Condition;
+import robocode.*;
 
 import java.util.*;
 
@@ -42,7 +41,7 @@ public class CustomOdometer {
         else if(isRunning && !raceCompleted && p.equals(startingPoint) && numRegisters > 50){
             isRunning = false;
             raceCompleted = true;
-            System.out.println("Acabou a corrida");
+            this.ar.setDebugProperty("odometer_distance_measured", String.format("%.4f", totalDistance));
         }
         else if(isRunning && !raceCompleted) {
             totalDistance += Math.distanceBetween2Points(p.x, p.y, positions.get(numRegisters).x, positions.get(numRegisters).y);
@@ -57,6 +56,7 @@ public class CustomOdometer {
     }
 
     public double getTotal(){
+        this.ar.setDebugProperty("odometer_distance_measured", String.format("%.4f", totalDistance));
         return  totalDistance;
     }
 
