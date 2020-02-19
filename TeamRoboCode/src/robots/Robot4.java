@@ -1,7 +1,10 @@
 package robots;
 
 import robocode.*;
+import utils.Math;
 import utils.Message;
+
+import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class Robot4 extends TeamRobot{
     public void run() {
@@ -14,7 +17,6 @@ public class Robot4 extends TeamRobot{
             turnGunRight(360);
         }
     }
-
 
     public void onMessageReceived(MessageEvent event) {
         Message message = (Message) event.getMessage();
@@ -35,6 +37,23 @@ public class Robot4 extends TeamRobot{
     public void onHitWall(HitWallEvent e) {
         // Replace the next line with any behavior you would like
         back(20);
+    }
+
+    public void goTo(double toX, double toY){
+        double fromX = getX();
+        double fromY = getY();
+        double distance =  Math.distanceBetween2Points(fromX, fromY, toX, toY);
+
+        // Pythagoras theorem to calculate the complementary angel
+        double complementaryAngle = Math.pythagorasTheorem(fromX, fromY, toX, toY);
+
+        double angleToTurn = 180-complementaryAngle;
+
+        // Turn face to our desired position. getHeading because the robot doesn't start at exactly 0 degrees (north)
+        turnLeft(normalRelativeAngleDegrees(angleToTurn + getHeading()));
+
+        // Move on
+        ahead(distance);
     }
 }
 
