@@ -80,10 +80,9 @@ public class Robot1 extends TeamRobot{
         back(20);
     }
 
-    public void goTo(double toX, double toY){
+    public void turnTo(double toX, double toY){
         double fromX = getX();
         double fromY = getY();
-        double distance =  Math.distanceBetween2Points(fromX, fromY, toX, toY);
 
         // Pythagoras theorem to calculate the complementary angel
         double complementaryAngle = Math.pythagorasTheorem(fromX, fromY, toX, toY);
@@ -92,6 +91,15 @@ public class Robot1 extends TeamRobot{
 
         // Turn face to our desired position. getHeading because the robot doesn't start at exactly 0 degrees (north)
         turnLeft(normalRelativeAngleDegrees(angleToTurn + getHeading()));
+    }
+
+    public void goTo(double toX, double toY){
+        double fromX = getX();
+        double fromY = getY();
+
+        turnTo(toX,toY);
+
+        double distance =  Math.distanceBetween2Points(fromX, fromY, toX, toY);
 
         // Move on
         ahead(distance);
