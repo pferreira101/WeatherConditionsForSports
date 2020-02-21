@@ -3,6 +3,7 @@ package robots;
 import robocode.*;
 import utils.Math;
 import utils.Message;
+import utils.Position;
 
 import java.io.IOException;
 
@@ -20,8 +21,8 @@ public class Robot1 extends TeamRobot{
 
             // Create and send message
             Message message = new Message(getName(), teammates[0], "Então mpt " + teammates[0] + ", daqui fala o " + getName() + "!");
-            System.out.println("Vou enviar mensagem para o " + teammates[0]);
-            System.out.println("Conteúdo: " + message.getContent());
+            //System.out.println("Vou enviar mensagem para o " + teammates[0]);
+            //System.out.println("Conteúdo: " + message.getContent());
 
             try {
                 sendMessage(teammates[0], message);
@@ -43,7 +44,30 @@ public class Robot1 extends TeamRobot{
 
     public void onScannedRobot(ScannedRobotEvent e) {
         // Replace the next line with any behavior you would like
+        detectPosition(e);
         fire(1);
+    }
+
+    public Position detectPosition(ScannedRobotEvent e) {
+
+        System.out.println("-----");
+        System.out.println("X: " + getX());
+        System.out.println("Y: " + getY());
+        System.out.println("Radar Heading Degrees: " + (getRadarHeading()));
+        System.out.println("Radar Heading Radians: " + (getRadarHeadingRadians()));
+
+        System.out.println("--- Scanned Robot: ---");
+        System.out.println("Name " + e.getName());
+        System.out.println("Distance " + e.getDistance());
+
+        // "90º - x" because the "referencial cartesiano" is 90 degrees different
+        double oppositeX = getX() + e.getDistance()*java.lang.Math.cos(java.lang.Math.toRadians(90) - getRadarHeadingRadians());
+        double oppositeY = getY() + e.getDistance()*java.lang.Math.sin(java.lang.Math.toRadians(90) - getRadarHeadingRadians());
+
+        System.out.println("Opposite X: " + oppositeX);
+        System.out.println("Opposite Y: " + oppositeY);
+
+        return new Position(oppositeX,oppositeY);
     }
 
     public void onHitByBullet(HitByBulletEvent e) {
