@@ -1,6 +1,8 @@
 package utils;
 
-public class Position {
+import java.io.Serializable;
+
+public class Position implements Serializable {
     double x;
     double y;
 

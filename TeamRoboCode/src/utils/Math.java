@@ -7,19 +7,4 @@ public class Math {
         return x;
     }
 
-    public static double pythagorasTheorem(double fromX, double fromY, double toX, double toY){
-        // Pythagoras theorem
-        double hipotenusa = distanceBetween2Points(fromX, fromY, toX, toY);
-        double adjacente = distanceBetween2Points(fromX, fromY, fromX, toY);
-        double cosB = adjacente/hipotenusa;
-
-        // Inverse of Cos
-        double acosB = java.lang.Math.acos(cosB);
-
-        // Transform to Degrees
-        double acosBDegrees = (180/ java.lang.Math.PI)*acosB;
-
-        return acosBDegrees;
-    }
-
 }

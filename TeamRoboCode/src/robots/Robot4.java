@@ -3,54 +3,106 @@ package robots;
 import robocode.*;
 import utils.Math;
 import utils.Message;
+import utils.Position;
 
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class Robot4 extends TeamRobot{
+    Position positionToFire = null;
+    double theta = 0;
+    boolean onMission = false;
+
     public void run() {
-        // Robot main loop
+
         while(true) {
-            // Replace the next 4 lines with any behavior you would like
-            ahead(100);
-            turnGunRight(360);
-            back(100);
-            turnGunRight(360);
+            if(!onMission) {
+                // Search for enemies
+                turnLeft(360);
+            }
+        }
+
+    }
+
+    public void onScannedRobot(ScannedRobotEvent e) {
+        if(!onMission){
+            fire(4);
+        }
+    }
+
+    public void onHitByBullet(HitByBulletEvent e) {
+        if(!onMission) {
+            ahead(200);
         }
     }
 
     public void onMessageReceived(MessageEvent event) {
         Message message = (Message) event.getMessage();
-        System.out.println("Sou o Robot " + message.getReceiver() + " e recebi do " + message.getSender() + " -> " + message.getContent());
+        switch (message.getTipo()) {
+            case 0:
+                System.out.println("Sou o Robot " + message.getReceiver() + " e recebi do " + message.getSender() + " -> " + message.getContent());
+                break;
+            case 1:
+                System.out.println("Recebi um turnTo to " + message.getPosition().getX() + " " + message.getPosition().getY());
+
+                positionToFire = message.getPosition();
+
+                // Turn to position received by message
+                turnTo(positionToFire);
+
+                // Defense movement
+                movementWhenFiring(positionToFire);
+
+                // Return to the original position at the end of the attack
+                turnLeft(normalRelativeAngleDegrees(theta - getHeading())+90);
+                turnGunLeft(normalRelativeAngleDegrees(theta - getHeading()));
+                break;
+        }
     }
 
+    public void movementWhenFiring(Position position){
+        ahead(100);
 
-    public void onScannedRobot(ScannedRobotEvent e) {
-        // Replace the next line with any behavior you would like
-        fire(1);
+        // Calculate angle to target
+        double theta = java.lang.Math.toDegrees(java.lang.Math.atan2(position.getX() - this.getX(), position.getY() - this.getY()));
+
+        // Fire to target
+        turnGunRight(normalRelativeAngleDegrees(theta - getHeading()+90));
+        fire(4);
+        turnGunLeft(normalRelativeAngleDegrees(theta - getHeading()+90));
+
+        back(200);
+
+        // Fire to target
+        turnGunLeft(normalRelativeAngleDegrees(theta - getHeading()+90));
+        fire(4);
+        turnGunRight(normalRelativeAngleDegrees(theta - getHeading()+90));
+
+        // Fire to target
+        ahead(100);
+        fire(4);
     }
 
-    public void onHitByBullet(HitByBulletEvent e) {
-        // Replace the next line with any behavior you would like
-        back(10);
+    public void turnTo(Position position){
+        double dx = position.getX() - this.getX();
+        double dy = position.getY() - this.getY();
+
+        // Calculate angle to target
+        theta = java.lang.Math.toDegrees(java.lang.Math.atan2(dx, dy));
+
+        // Turn perpendicularly
+        turnRight(normalRelativeAngleDegrees(theta - getHeading())+90);
+
+        // Turn gun to target
+        turnGunRight(normalRelativeAngleDegrees(theta - getHeading()));
     }
 
-    public void onHitWall(HitWallEvent e) {
-        // Replace the next line with any behavior you would like
-        back(20);
-    }
-
-    public void goTo(double toX, double toY){
+    public void goTo(Position position){
         double fromX = getX();
         double fromY = getY();
-        double distance =  Math.distanceBetween2Points(fromX, fromY, toX, toY);
 
-        // Pythagoras theorem to calculate the complementary angel
-        double complementaryAngle = Math.pythagorasTheorem(fromX, fromY, toX, toY);
+        turnTo(position);
 
-        double angleToTurn = 180-complementaryAngle;
-
-        // Turn face to our desired position. getHeading because the robot doesn't start at exactly 0 degrees (north)
-        turnLeft(normalRelativeAngleDegrees(angleToTurn + getHeading()));
+        double distance =  Math.distanceBetween2Points(fromX, fromY, position.getX(), position.getY());
 
         // Move on
         ahead(distance);

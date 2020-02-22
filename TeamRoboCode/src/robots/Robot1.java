@@ -10,96 +10,110 @@ import java.io.IOException;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class Robot1 extends TeamRobot{
+    boolean onMission = false;
+
+    String[] teammates;
 
     public void run() {
-        // Check teammate
-        String[] teammates = getTeammates();
 
+        /*teammates = getTeammates();
+
+        // Check teammates
         if(teammates != null) {
             for (int i = 0; i < teammates.length; i++)
                 System.out.println(teammates[i]);
 
             // Create and send message
-            Message message = new Message(getName(), teammates[0], "Então mpt " + teammates[0] + ", daqui fala o " + getName() + "!");
-            //System.out.println("Vou enviar mensagem para o " + teammates[0]);
-            //System.out.println("Conteúdo: " + message.getContent());
+            Message message = new Message(getName(), teammates[0], "Então mpt " + teammates[0] + ", daqui fala o " + getName() + "!",0);
+            System.out.println("Vou enviar mensagem para o " + teammates[0]);
+            System.out.println("Conteúdo: " + message.getContent());
 
             try {
                 sendMessage(teammates[0], message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
-        // Robot main loop
+
         while(true) {
-            // Replace the next 4 lines with any behavior you would like
-            ahead(100);
-            turnGunRight(360);
-            back(100);
-            turnGunRight(360);
+            if(!onMission) {
+                // Search for enemies
+                turnLeft(360);
+            }
+            else {
+                // Attack mode
+                fire(4);
+                onMission = false;
+            }
         }
     }
 
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        // Replace the next line with any behavior you would like
-        detectPosition(e);
-        fire(1);
+        if (!isTeammate(e.getName())) {
+            onMission = true;
+
+            // Stop to fire
+            stop();
+
+            // Detect enemy position
+            Position enemy = detectPosition(e);
+
+            // Construct message
+            Message fireEnemy = new Message();
+            fireEnemy.setTipo(1);
+            fireEnemy.setPosition(enemy);
+
+            try {
+                // Send enemy position to teammates
+                broadcastMessage(fireEnemy);
+            } catch (IOException ex) {
+                ex.printStackTrace(out);
+            }
+        }
+    }
+
+    public void onHitByBullet(HitByBulletEvent e) {
+        ahead(200);
     }
 
     public Position detectPosition(ScannedRobotEvent e) {
 
-        System.out.println("-----");
-        System.out.println("X: " + getX());
-        System.out.println("Y: " + getY());
-        System.out.println("Radar Heading Degrees: " + (getRadarHeading()));
-        System.out.println("Radar Heading Radians: " + (getRadarHeadingRadians()));
-
         System.out.println("--- Scanned Robot: ---");
         System.out.println("Name " + e.getName());
-        System.out.println("Distance " + e.getDistance());
 
-        // "90º - x" because the "referencial cartesiano" is 90 degrees different
-        double oppositeX = getX() + e.getDistance()*java.lang.Math.cos(java.lang.Math.toRadians(90) - getRadarHeadingRadians());
-        double oppositeY = getY() + e.getDistance()*java.lang.Math.sin(java.lang.Math.toRadians(90) - getRadarHeadingRadians());
+        // Calculate enemy bearing
+        double enemyBearing = this.getHeading() + e.getBearing();
 
-        System.out.println("Opposite X: " + oppositeX);
-        System.out.println("Opposite Y: " + oppositeY);
+        // Calculate enemy's position
+        double enemyX = getX() + e.getDistance() * java.lang.Math.sin(java.lang.Math.toRadians(enemyBearing));
+        double enemyY = getY() + e.getDistance() * java.lang.Math.cos(java.lang.Math.toRadians(enemyBearing));
 
-        return new Position(oppositeX,oppositeY);
+        System.out.println("Enemy X: " + enemyX);
+        System.out.println("Enemy Y: " + enemyY);
+
+        return new Position(enemyX,enemyY);
     }
 
-    public void onHitByBullet(HitByBulletEvent e) {
-        // Replace the next line with any behavior you would like
-        back(10);
+    public void turnTo(Position position){
+        double dx = position.getX() - this.getX();
+        double dy = position.getY() - this.getY();
+
+        // Calculate angle to target
+        double theta = java.lang.Math.toDegrees(java.lang.Math.atan2(dx, dy));
+
+        // Turn to target
+        turnRight(normalRelativeAngleDegrees(theta - getHeading()));
     }
 
-    public void onHitWall(HitWallEvent e) {
-        // Replace the next line with any behavior you would like
-        back(20);
-    }
-
-    public void turnTo(double toX, double toY){
+    public void goTo(Position position){
         double fromX = getX();
         double fromY = getY();
 
-        // Pythagoras theorem to calculate the complementary angel
-        double complementaryAngle = Math.pythagorasTheorem(fromX, fromY, toX, toY);
+        turnTo(position);
 
-        double angleToTurn = 180-complementaryAngle;
-
-        // Turn face to our desired position. getHeading because the robot doesn't start at exactly 0 degrees (north)
-        turnLeft(normalRelativeAngleDegrees(angleToTurn + getHeading()));
-    }
-
-    public void goTo(double toX, double toY){
-        double fromX = getX();
-        double fromY = getY();
-
-        turnTo(toX,toY);
-
-        double distance =  Math.distanceBetween2Points(fromX, fromY, toX, toY);
+        double distance =  Math.distanceBetween2Points(fromX, fromY, position.getX(), position.getY());
 
         // Move on
         ahead(distance);
