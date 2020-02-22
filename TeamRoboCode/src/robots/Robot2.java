@@ -14,25 +14,6 @@ public class Robot2 extends TeamRobot {
 
     public void run() {
 
-        while(true) {
-            if(!onMission) {
-                // Search for enemies
-                turnLeft(360);
-            }
-        }
-
-    }
-
-    public void onScannedRobot(ScannedRobotEvent e) {
-        if(!onMission){
-            fire(4);
-        }
-    }
-
-    public void onHitByBullet(HitByBulletEvent e) {
-        if(!onMission) {
-            ahead(200);
-        }
     }
 
     public void onMessageReceived(MessageEvent event) {
@@ -48,10 +29,10 @@ public class Robot2 extends TeamRobot {
 
                 positionToFire = message.getPosition();
 
-                // Turn to position received by message
+                // Turn to position received
                 turnTo(positionToFire);
 
-                // Defense movement
+                // Defense movement & Attack
                 movementWhenFiring(positionToFire);
 
                 // Return to the original position at the end of the attack
