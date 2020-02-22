@@ -51,14 +51,11 @@ public class Robot2 extends TeamRobot {
                 // Turn to position received by message
                 turnTo(positionToFire);
 
-                // Defense movement
+                // Defense movement & Fire
                 movementWhenFiring(positionToFire);
 
-                // Return to the original position at the end of the attack
-                turnLeft(normalRelativeAngleDegrees(theta - getHeading())+90);
-                turnGunLeft(normalRelativeAngleDegrees(theta - getHeading()));
-
                 onMission = false;
+
                 break;
         }
     }
@@ -84,6 +81,10 @@ public class Robot2 extends TeamRobot {
         // Fire to target
         ahead(100);
         fire(4);
+
+        // Return to the original position at the end of the attack
+        turnLeft(normalRelativeAngleDegrees(theta - getHeading())+90);
+        turnGunLeft(normalRelativeAngleDegrees(theta - getHeading()));
     }
 
     public void turnTo(Position position){
