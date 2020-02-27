@@ -3,11 +3,4 @@ RoboCode/.idea/*
 RoboCode/RoboCode.iml
 RoboCode/.DS_Store
 .DS_Store
-TeamRoboCode/.idea/$PRODUCT_WORKSPACE_FILE$
-TeamRoboCode/.idea/libraries/bcel_6_2.xml
-TeamRoboCode/.idea/misc.xml
-TeamRoboCode/.idea/modules.xml
-TeamRoboCode/.idea/uiDesigner.xml
-TeamRoboCode/.idea/vcs.xml
-TeamRoboCode/TeamRoboCode.iml
-TeamRoboCode/.idea/workspace.xml
+TeamRoboCode/.idea/*
