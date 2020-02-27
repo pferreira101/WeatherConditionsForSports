@@ -49,6 +49,16 @@ public class Robot1 extends TeamRobot{
         }
     }
 
+    public void onMessageReceived(MessageEvent e){
+        Message message = (Message) e.getMessage();
+        switch (message.getTipo()) {
+            case 2:
+                System.out.println("Recebi mensagem para me desviar");
+                ahead(200);
+                break;
+        }
+    }
+
 
     public void onScannedRobot(ScannedRobotEvent e) {
         if (!isTeammate(e.getName())) {
@@ -70,6 +80,16 @@ public class Robot1 extends TeamRobot{
                 broadcastMessage(fireEnemy);
             } catch (IOException ex) {
                 ex.printStackTrace(out);
+            }
+        }
+        else {
+            Message carefull = new Message();
+            carefull.setTipo(2);
+
+            try{
+                sendMessage(e.getName(),carefull);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -105,6 +125,17 @@ public class Robot1 extends TeamRobot{
 
         // Turn to target
         turnRight(normalRelativeAngleDegrees(theta - getHeading()));
+    }
+
+    public void turnRadarTo(Position position){
+        double dx = position.getX() - this.getX();
+        double dy = position.getY() - this.getY();
+
+        // Calculate angle to target
+        double theta = java.lang.Math.toDegrees(java.lang.Math.atan2(dx, dy));
+
+        // Turn to target
+        turnRadarRight(normalRelativeAngleDegrees(theta - getRadarHeading()));
     }
 
     public void goTo(Position position){

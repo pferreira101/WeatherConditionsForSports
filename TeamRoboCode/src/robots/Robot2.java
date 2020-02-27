@@ -5,6 +5,8 @@ import utils.Math;
 import utils.Message;
 import utils.Position;
 
+import java.io.IOException;
+
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class Robot2 extends TeamRobot {
@@ -16,6 +18,19 @@ public class Robot2 extends TeamRobot {
 
     }
 
+    public void onScannedRobot(ScannedRobotEvent event){
+        if(isTeammate(event.getName())){
+            Message carefull = new Message();
+            carefull.setTipo(2);
+
+            try{
+                sendMessage(event.getName(),carefull);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void onMessageReceived(MessageEvent event) {
         Message message = (Message) event.getMessage();
         switch (message.getTipo()) {
@@ -25,9 +40,12 @@ public class Robot2 extends TeamRobot {
             case 1:
                 System.out.println("Recebi um turnTo to " + message.getPosition().getX() + " " + message.getPosition().getY());
 
-                onMission = true;
-
                 positionToFire = message.getPosition();
+
+                //Turn radar to position to fire
+                turnRadarTo(message.getPosition());
+
+                onMission = true;
 
                 // Turn to position received
                 turnTo(positionToFire);
@@ -40,6 +58,10 @@ public class Robot2 extends TeamRobot {
                 turnGunLeft(normalRelativeAngleDegrees(theta - getHeading()));
 
                 onMission = false;
+                break;
+            case 2:
+                System.out.println("Recebi mensagem para me desviar");
+                ahead(200);
                 break;
         }
     }
@@ -79,6 +101,17 @@ public class Robot2 extends TeamRobot {
 
         // Turn gun to target
         turnGunRight(normalRelativeAngleDegrees(theta - getHeading()));
+    }
+
+    public void turnRadarTo(Position position){
+        double dx = position.getX() - this.getX();
+        double dy = position.getY() - this.getY();
+
+        // Calculate angle to target
+        double theta = java.lang.Math.toDegrees(java.lang.Math.atan2(dx, dy));
+
+        // Turn to target
+        turnRadarRight(normalRelativeAngleDegrees(theta - getRadarHeading()));
     }
 
     public void goTo(Position position){

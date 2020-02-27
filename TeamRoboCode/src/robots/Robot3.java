@@ -5,6 +5,8 @@ import utils.Math;
 import utils.Message;
 import utils.Position;
 
+import java.io.IOException;
+
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class Robot3 extends TeamRobot{
@@ -14,6 +16,19 @@ public class Robot3 extends TeamRobot{
 
     public void run() {
 
+    }
+
+    public void onScannedRobot(ScannedRobotEvent event){
+        if(isTeammate(event.getName())){
+            Message carefull = new Message();
+            carefull.setTipo(2);
+
+            try{
+                sendMessage(event.getName(),carefull);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void onMessageReceived(MessageEvent event) {
@@ -40,6 +55,10 @@ public class Robot3 extends TeamRobot{
                 turnGunLeft(normalRelativeAngleDegrees(theta - getHeading()));
 
                 onMission = false;
+                break;
+            case 2:
+                System.out.println("Recebi mensagem para me desviar");
+                ahead(200);
                 break;
         }
     }
