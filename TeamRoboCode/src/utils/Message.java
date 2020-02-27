@@ -6,7 +6,7 @@ public class Message implements Serializable {
     String sender;
     String receiver;
     String content;
-    int tipo; // 0 -> just communication; 1 -> turn to enemy and shoot;
+    int tipo; // 0 -> just communication; 1 -> turn to enemy and shoot; 2 -> move out of the way;
     Position position; // 1 -> position of the enemy selected;
 
     public Message(){
