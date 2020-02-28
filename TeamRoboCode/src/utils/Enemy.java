@@ -61,7 +61,17 @@ public class Enemy {
     }
 
     public Enemy(){
-        reset();
+        bearing = 0.0;
+        distance =0.0;
+        energy= 0.0;
+        heading =0.0;
+        velocity = 0.0;
+        name = null;
+        position = null;
     }
 
+    @Override
+    public String toString() {
+        return "Nome: " + name;
+    }
 }

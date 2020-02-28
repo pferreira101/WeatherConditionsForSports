@@ -14,24 +14,32 @@ import java.util.Map;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class TesteRobot extends TeamRobot{
-    private Enemy enemy = new Enemy();
+    private Enemy enemy;
 
     Map<String,Position> teamPositions = new HashMap<>();
     Map<String,Enemy> enemies = new HashMap<>();
+
+    int aliveEnemies = 4;
+    int enemiesToScan = aliveEnemies;
+    int scannedEnemies = 0;
+    int aliveTeammates = 3;
+    int msgsReceived = 0;
+    boolean fighting = false;
+
 
     public void run() {
         sendPositionToTeammates();
         setAdjustRadarForRobotTurn(true);
         setAdjustGunForRobotTurn(true);
         turnRadarRightRadians(Double.POSITIVE_INFINITY);
-        enemy.reset();
-
     }
 
     public void onMessageReceived(MessageEvent event) {
         Message message = (Message) event.getMessage();
+
         switch (message.getTipo()) {
-            case 0:
+            case Message.INFO:
+                msgsReceived++;
                 teamPositions.put(message.getSender(),message.getPosition());
                 break;
         }
@@ -50,23 +58,40 @@ public class TesteRobot extends TeamRobot{
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        if (!isTeammate(e.getName())){
-            Enemy enemy = new Enemy();
-            Position position = detectPosition(e);
-            enemy.update(e,position);
-            enemies.put(e.getName(),enemy);
+        Position position = detectPosition(e);
+
+        if(!fighting) {
+
+            if (!isTeammate(e.getName())) {
+                Enemy enemy = new Enemy();
+                enemy.update(e, position);
+                enemies.put(e.getName(), enemy);
+                scannedEnemies++;
+            }
+
+            //System.out.println("Inimigo detetado. "+ this.scannedEnemies + " ||  " + msgsToReceive);
+
+            if(scannedEnemies >= enemiesToScan && msgsReceived >= aliveTeammates) {
+                fighting = true;
+                enemy = selectTarget();
+                System.out.println("Inimigo escolhido " + enemy.toString());
+                attack(enemy);
+            }
+        }
+        else {
+            if(e.getName().equals(enemy.getName())){
+                enemy.update(e, position);
+                attack(enemy);}
         }
 
-        /*if (enemy.none() || e.getName().equals(enemy.getName())) {
-            enemy.update(e);
-            attack(enemy);
-        }*/
+
     }
 
-    public Enemy positionToAttack(){
+    public Enemy selectTarget(){
         double totalDistance = 0;
         double minTotalDistance = 10000;
         Enemy selected = null;
+        teamPositions.put(getName(),new Position(getX(),getY()));
         for (Enemy enemy : enemies.values()) {
             for(Position team : teamPositions.values()) {
                 totalDistance += utils.Math.distanceBetween2Points(enemy.getPosition().getX(),enemy.getPosition().getY(),team.getX(),team.getY());
@@ -80,19 +105,12 @@ public class TesteRobot extends TeamRobot{
     }
 
     public Position detectPosition(ScannedRobotEvent e) {
-
-        System.out.println("--- Scanned Robot: ---");
-        System.out.println("Name " + e.getName());
-
         // Calculate enemy bearing
         double enemyBearing = this.getHeading() + e.getBearing();
 
         // Calculate enemy's position
         double enemyX = getX() + e.getDistance() * java.lang.Math.sin(java.lang.Math.toRadians(enemyBearing));
         double enemyY = getY() + e.getDistance() * java.lang.Math.cos(java.lang.Math.toRadians(enemyBearing));
-
-        System.out.println("Enemy X: " + enemyX);
-        System.out.println("Enemy Y: " + enemyY);
 
         return new Position(enemyX,enemyY);
     }
@@ -127,12 +145,22 @@ public class TesteRobot extends TeamRobot{
 
     public void onRobotDeath(RobotDeathEvent e) {
         if (e.getName().equals(enemy.getName())) {
+            enemies.remove(enemy.getName());
             enemy.reset();
+            fighting = false;
+            enemiesToScan= --aliveEnemies;
+            msgsReceived = 0;
+            scannedEnemies = 0;
         }
-    }
-
-    public void onHitByBullet(HitByBulletEvent e) {
-        ahead(200);
+        if(isTeammate(e.getName())){
+            System.out.println("Aliado morreu " + e.getName());
+            aliveTeammates--;
+            this.teamPositions.remove(e.getName());
+            enemy.reset();
+            fighting = false;
+            msgsReceived = 0;
+            scannedEnemies = 0;
+        }
     }
 
 
