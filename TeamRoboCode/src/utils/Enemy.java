@@ -9,6 +9,7 @@ public class Enemy {
     double heading;
     double velocity;
     String name;
+    Position position;
 
     public double getBearing(){
         return bearing;
@@ -28,13 +29,18 @@ public class Enemy {
     public String getName(){
         return name;
     }
-    public void update(ScannedRobotEvent bot){
+    public Position getPosition(){
+        return position;
+    }
+
+    public void update(ScannedRobotEvent bot, Position pos){
         bearing = bot.getBearing();
         distance = bot.getDistance();
         energy = bot.getEnergy();
         heading = bot.getHeading();
         velocity = bot.getVelocity();
         name = bot.getName();
+        position = pos;
     }
 
     public void reset(){
@@ -44,6 +50,7 @@ public class Enemy {
         heading =0.0;
         velocity = 0.0;
         name = null;
+        position = null;
     }
 
     public Boolean none(){

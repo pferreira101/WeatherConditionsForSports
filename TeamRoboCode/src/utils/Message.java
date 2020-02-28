@@ -7,7 +7,7 @@ public class Message implements Serializable {
     String receiver;
     String content;
     int tipo; // 0 -> just communication; 1 -> turn to enemy and shoot; 2 -> move out of the way;
-    Position position; // 1 -> position of the enemy selected;
+    Position position; // 0 -> position of teammate; 1 -> position of the enemy selected;
 
     public final static int INFO = 0;
     public final static int ATTACK = 1;
@@ -27,6 +27,12 @@ public class Message implements Serializable {
         this.content = "";
         this.tipo = type;
         this.position=pos;
+    }
+
+    public Message(String sender, int tipo, Position pos){
+        this.sender = sender;
+        this.tipo = tipo;
+        this.position = pos;
     }
 
     public Message(String sender, String receiver, String content, int tipo){
