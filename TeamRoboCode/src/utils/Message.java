@@ -9,11 +9,24 @@ public class Message implements Serializable {
     int tipo; // 0 -> just communication; 1 -> turn to enemy and shoot; 2 -> move out of the way;
     Position position; // 1 -> position of the enemy selected;
 
+    public final static int INFO = 0;
+    public final static int ATTACK = 1;
+    public final static int WARNING = 2;
+    public final static int MOVETO = 3;
+
     public Message(){
         this.sender = "";
         this.receiver = "";
         this.content = "";
         this.tipo = 0;
+    }
+
+    public Message(int type, Position pos){
+        this.sender = "";
+        this.receiver = "";
+        this.content = "";
+        this.tipo = type;
+        this.position=pos;
     }
 
     public Message(String sender, String receiver, String content, int tipo){
