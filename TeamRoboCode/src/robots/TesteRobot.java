@@ -9,13 +9,11 @@ public class TesteRobot extends TeamRobot{
     private Enemy enemy = new Enemy();
 
     public void run() {
+        setAdjustRadarForRobotTurn(true);
         setAdjustGunForRobotTurn(true);
-        setAdjustRadarForRobotTurn(true); // radar independente do corpo do robot
+        turnRadarRightRadians(Double.POSITIVE_INFINITY);
         enemy.reset();
-        while (true) {
-            setTurnRadarRight(360);
-            execute();
-        }
+
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
@@ -26,7 +24,7 @@ public class TesteRobot extends TeamRobot{
     }
 
     void attack(Enemy target){
-        double gunTurnAmt = normalRelativeAngleDegrees(target.getBearing() + (getHeading() - getRadarHeading()));
+        double gunTurnAmt = normalRelativeAngleDegrees(target.getBearing() + getHeading() - getGunHeading());
 
         if (target.getDistance() > 150) {
 
@@ -38,7 +36,7 @@ public class TesteRobot extends TeamRobot{
         }
 
         // Our target is close.
-        turnGunRight(gunTurnAmt);
+        setTurnGunRight(gunTurnAmt);
         fire(3);
 
         // Our target is too close!  Back up.
@@ -49,6 +47,8 @@ public class TesteRobot extends TeamRobot{
                 ahead(40);
             }
         }
+
+        scan();
     }
 
     public void onRobotDeath(RobotDeathEvent e) {
