@@ -146,7 +146,10 @@ public class TesteRobot extends TeamRobot{
 
         // Our target is close.
         setTurnGunRight(gunTurnAmt);
-        setFire(Math.min(400 / target.getDistance(), 3));
+
+        // if the gun is cool and we're pointed at the target, shoot!
+        if (getGunHeat() == 0 && Math.abs(getGunTurnRemaining()) < 30)
+            setFire(Math.min(400 / target.getDistance(), 3));
 
         // Our target is too close!  Back up.
         if (target.getDistance() < 100) {
