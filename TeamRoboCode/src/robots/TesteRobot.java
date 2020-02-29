@@ -22,7 +22,7 @@ public class TesteRobot extends TeamRobot{
     int aliveEnemies = 4;
     int enemiesToScan = aliveEnemies;
     int scannedEnemies = 0;
-    int aliveTeammates = 3;
+    int aliveTeammates = 1;
     int msgsReceived = 0;
     boolean fighting = false;
 
@@ -45,6 +45,20 @@ public class TesteRobot extends TeamRobot{
         }
     }
 
+    public void onHitRobot(HitRobotEvent event) {
+        if(isTeammate(event.getName())) {
+            if (event.getBearing() > -90 && event.getBearing() <= 90) {
+                back(100);
+            } else {
+                ahead(100);
+            }
+        }
+        else {
+            back(50);
+            turnLeft(30);
+        }
+    }
+
     public void sendPositionToTeammates(){
 
         Message msg = new Message(getName(),Message.INFO,new Position(this.getX(), this.getY()));
@@ -60,6 +74,8 @@ public class TesteRobot extends TeamRobot{
     public void onScannedRobot(ScannedRobotEvent e) {
         Position position = detectPosition(e);
 
+        System.out.println(enemiesToScan);
+
         if(!fighting) {
 
             if (!isTeammate(e.getName())) {
@@ -69,9 +85,9 @@ public class TesteRobot extends TeamRobot{
                 scannedEnemies++;
             }
 
-            //System.out.println("Inimigo detetado. "+ this.scannedEnemies + " ||  " + msgsToReceive);
+            //System.out.println("Inimigo detetado. "+ this.scannedEnemies + " ||  " + msgsReceived);
 
-            if(scannedEnemies >= enemiesToScan && msgsReceived >= aliveTeammates) {
+            if(scannedEnemies >= enemiesToScan) {
                 fighting = true;
                 enemy = selectTarget();
                 System.out.println("Inimigo escolhido " + enemy.toString());
@@ -81,7 +97,8 @@ public class TesteRobot extends TeamRobot{
         else {
             if(e.getName().equals(enemy.getName())){
                 enemy.update(e, position);
-                attack(enemy);}
+                attack(enemy);
+            }
         }
 
 
