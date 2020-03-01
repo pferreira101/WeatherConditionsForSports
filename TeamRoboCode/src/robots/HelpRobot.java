@@ -29,12 +29,14 @@ public class HelpRobot extends TeamRobot{
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        if(!helpMode) {
-            Position position = detectPosition(e);
+        if(!isTeammate(e.getName())) {
+            if (!helpMode) {
+                Position position = detectPosition(e);
 
-            enemy.update(e, position);
+                enemy.update(e, position);
 
-            attack();
+                attack();
+            }
         }
     }
 
