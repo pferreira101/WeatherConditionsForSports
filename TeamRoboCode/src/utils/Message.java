@@ -13,6 +13,7 @@ public class Message implements Serializable {
     public final static int ATTACK = 1;
     public final static int WARNING = 2;
     public final static int MOVETO = 3;
+    public final static int HELP = 4;
 
     public Message(){
         this.sender = "";
