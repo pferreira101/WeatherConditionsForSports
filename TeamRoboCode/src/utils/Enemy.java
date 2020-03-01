@@ -2,7 +2,9 @@ package utils;
 
 import robocode.ScannedRobotEvent;
 
-public class Enemy {
+import java.io.Serializable;
+
+public class Enemy implements Serializable {
     double bearing;
     double distance;
     double energy;

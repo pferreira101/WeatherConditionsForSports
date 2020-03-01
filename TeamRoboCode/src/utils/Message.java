@@ -6,12 +6,13 @@ public class Message implements Serializable {
     String sender;
     String receiver;
     String content;
-    int tipo; // 0 -> just communication; 1 -> turn to enemy and shoot; 2 -> move out of the way;
+    int tipo; // 0 -> just communication; 1 -> turn to enemy and shoot; 2 -> leader died, time do change;
     Position position; // 0 -> position of teammate; 1 -> position of the enemy selected;
+    Enemy enemy;
 
     public final static int INFO = 0;
     public final static int ATTACK = 1;
-    public final static int WARNING = 2;
+    public final static int CHANGELEADER = 2;
     public final static int MOVETO = 3;
     public final static int HELP = 4;
 
@@ -41,6 +42,11 @@ public class Message implements Serializable {
         this.receiver = receiver;
         this.content = content;
         this.tipo = tipo;
+    }
+
+    public Message(int type, Enemy enemy){
+        this.tipo = type;
+        this.enemy = enemy;
     }
 
     public String getSender() {
@@ -82,4 +88,8 @@ public class Message implements Serializable {
     public void setPosition(Position position) {
         this.position = position;
     }
+
+    public Enemy getEnemy(){ return enemy; }
+
+    public void setEnemy(Enemy enemy) { this.enemy = enemy; }
 }
