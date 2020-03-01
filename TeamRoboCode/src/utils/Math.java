@@ -7,7 +7,7 @@ public class Math {
         return x;
     }
 
-    double normalizeBearing(double angle) {
+    public static double normalizeBearing(double angle) {
         while (angle > 180) angle -= 360;
         while (angle < -180) angle += 360;
         return angle;

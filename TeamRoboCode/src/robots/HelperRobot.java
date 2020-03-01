@@ -23,6 +23,7 @@ public class HelperRobot extends TeamRobot {
     boolean helpMode = false;
     boolean teamleader = false;
     boolean fighting = false;
+    boolean choosenTarget = false;
 
     public void run() {
         setAdjustRadarForRobotTurn(true);
@@ -36,24 +37,35 @@ public class HelperRobot extends TeamRobot {
 
         if (!isTeammate(e.getName())) {
             Position position = detectPosition(e);
-            Enemy enemy = new Enemy(e, position);
-            enemies.put(e.getName(), enemy);
+            if(teamleader){
+                Enemy enemy = new Enemy(e, position);
+                enemies.put(e.getName(), enemy);
 
-            if(!helpMode && !fighting && enemies.values().size() == aliveEnemies){
-                target = selectTarget();
-                System.out.println("Escolhi primeiro inimigo");
-                fighting = true;
-            }
-
-            if (!helpMode && e.getName().equals(target.getName())) {
-                target.update(e, position);
-                attack();
-                if(teamleader)
+                if(!fighting && enemies.values().size() == aliveEnemies){
+                    fighting = true;
+                    target = selectTarget();
+                    System.out.println("Escolhi primeiro inimigo");
                     orderAttack(target);
-            } else {
-                if (e.getName().equals(target.getName())) {
-                    target.update(e, position);
-                    charge();
+                }
+
+            } else{
+                if(!helpMode){
+                    if(e.getName().equals(target.getName())) {
+                        System.out.println("! HELP contra " + target.getName());
+                        target.update(e, position);
+                    }
+                    if (choosenTarget == false && e.getDistance() <= 250) {
+                        System.out.println("! HELP Target escolhido " + target.getName());
+                        target.update(e,position);
+                        choosenTarget = true;
+                    }
+                    attack();
+                }else{
+                    if(e.getName().equals(target.getName()) && e.getDistance() <= 300) {
+                        System.out.println("HELP contra " + target.getName());
+                        target.update(e,position);
+                        attack();
+                    }
                 }
             }
         }
@@ -64,32 +76,38 @@ public class HelperRobot extends TeamRobot {
 
         switch (message.getTipo()) {
             case Message.HELP:
-                helpMode = true;
+                System.out.println("HELP RECEBIDO");
                 target = message.getTarget();
-                charge();
+                helpMode = true;
                 break;
 
             case Message.CHANGELEADER:
-                teamleader = true;
+                System.out.println("CHANGELEADER RECEBIDO");
+                helpMode = false;
                 target = selectTarget();
-                orderAttack(target);
+                teamleader = true;
                 break;
         }
     }
 
 
     public void onRobotDeath(RobotDeathEvent e) {
-        if(!isTeammate(e.getName())) {
-            enemies.remove(target.getName());
-            aliveEnemies--;
-        }
 
-        if (e.getName().equals(target.getName())) {
-            target.reset();
-            helpMode = false;
-            if(teamleader){
-                target = selectTarget();
-                orderAttack(target);
+        System.out.println("MORTE");
+
+        if(!isTeammate(e.getName())) {
+            if(teamleader) {
+                enemies.remove(target.getName());
+                aliveEnemies--;
+            }
+            if (e.getName().equals(target.getName())) {
+                target.reset();
+                choosenTarget = false;
+                helpMode = false;
+                if(teamleader){
+                    target = selectTarget();
+                    orderAttack(target);
+                }
             }
         }
 
@@ -105,7 +123,7 @@ public class HelperRobot extends TeamRobot {
             moveDirection *= -1;
 
         // always square off against our enemy
-        setTurnRight(normalizeBearing(target.getBearing() + 90 - (15 * moveDirection)));
+        setTurnRight(utils.Math.normalizeBearing(target.getBearing() + 90 - (15 * moveDirection)));
 
         // strafe by changing direction every 5 ticks
         if (getTime() % 5 == 0) {
@@ -123,25 +141,7 @@ public class HelperRobot extends TeamRobot {
 
     }
 
-    public void charge() {
-        double gunTurnAmt = normalRelativeAngleDegrees(target.getBearing() + getHeading() - getGunHeading());
-
-        //Charge at the target
-        turnGunRight(gunTurnAmt);
-        turnRight(target.getBearing());
-        ahead(target.getDistance());
-
-        //We are close to the target
-        setTurnGunRight(gunTurnAmt);
-
-        // if the gun is cool and we're pointed at the target, shoot!
-        if (getGunHeat() == 0 && Math.abs(getGunTurnRemaining()) < 30)
-            setFire(MAX_BULLET_POWER);
-
-        scan();
-    }
-
-    private Enemy selectTarget() {
+    public Enemy selectTarget() {
         Enemy target = null;
         double minDist = 10000;
         for (Enemy e : this.enemies.values()) {
@@ -165,11 +165,6 @@ public class HelperRobot extends TeamRobot {
     }
 
 
-    double normalizeBearing(double angle) {
-        while (angle > 180) angle -= 360;
-        while (angle < -180) angle += 360;
-        return angle;
-    }
 
     // ########################## Comunicação ##########################
 
