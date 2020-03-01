@@ -44,8 +44,7 @@ public class TeamLeader extends TeamRobot {
         if (!fighting) {
 
             if (!isTeammate(e.getName())) {
-                Enemy enemy = new Enemy();
-                enemy.update(e, position);
+                Enemy enemy = new Enemy(e, position);
                 enemies.put(e.getName(), enemy);
                 scannedEnemies++;
             }
@@ -95,6 +94,9 @@ public class TeamLeader extends TeamRobot {
     }
 
     public void onRobotDeath(RobotDeathEvent e) {
+        if(!isTeammate(e.getName()))
+            enemies.remove(target.getName());
+
         if (e.getName().equals(target.getName())) {
             enemies.remove(target.getName());
             target.reset();
@@ -111,6 +113,12 @@ public class TeamLeader extends TeamRobot {
             this.teamPositions.remove(e.getName());
         }
     }
+
+    public void onDeath(DeathEvent event){
+        System.out.println("Teamleader morto");
+        changeLeader();
+    }
+
 
     // ########################## Ações ##########################
 
@@ -199,6 +207,16 @@ public class TeamLeader extends TeamRobot {
 
     public void requestInfo() {
         Message msg = new Message(Message.REQUEST_INFO);
+
+        try {
+            broadcastMessage(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void changeLeader() {
+        Message msg = new Message(Message.CHANGELEADER);
 
         try {
             broadcastMessage(msg);

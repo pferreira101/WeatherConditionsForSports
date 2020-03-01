@@ -4,7 +4,7 @@ import robocode.ScannedRobotEvent;
 
 import java.io.Serializable;
 
-public class Enemy  implements Serializable {
+public class Enemy implements Serializable {
 
     double bearing;
     double distance;
@@ -14,29 +14,35 @@ public class Enemy  implements Serializable {
     String name;
     Position position;
 
-    public double getBearing(){
+    public double getBearing() {
         return bearing;
     }
-    public double getDistance(){
+
+    public double getDistance() {
         return distance;
     }
-    public double getEnergy(){
+
+    public double getEnergy() {
         return energy;
     }
-    public double getHeading(){
+
+    public double getHeading() {
         return heading;
     }
-    public double getVelocity(){
+
+    public double getVelocity() {
         return velocity;
     }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    public Position getPosition(){
+
+    public Position getPosition() {
         return position;
     }
 
-    public void update(ScannedRobotEvent bot, Position pos){
+    public void update(ScannedRobotEvent bot, Position pos) {
         bearing = bot.getBearing();
         distance = bot.getDistance();
         energy = bot.getEnergy();
@@ -46,32 +52,43 @@ public class Enemy  implements Serializable {
         position = pos;
     }
 
-    public void reset(){
+    public void reset() {
         bearing = 0.0;
-        distance =0.0;
-        energy= 0.0;
-        heading =0.0;
+        distance = 0.0;
+        energy = 0.0;
+        heading = 0.0;
         velocity = 0.0;
         name = null;
         position = null;
     }
 
-    public Boolean none(){
+    public Boolean none() {
         if (name == null || name == "")
             return true;
         else
             return false;
     }
 
-    public Enemy(){
+    public Enemy() {
         bearing = 0.0;
-        distance =0.0;
-        energy= 0.0;
-        heading =0.0;
+        distance = 0.0;
+        energy = 0.0;
+        heading = 0.0;
         velocity = 0.0;
         name = null;
         position = null;
     }
+
+    public Enemy(ScannedRobotEvent bot, Position pos) {
+        bearing = bot.getBearing();
+        distance = bot.getDistance();
+        energy = bot.getEnergy();
+        heading = bot.getHeading();
+        velocity = bot.getVelocity();
+        name = bot.getName();
+        position = pos;
+    }
+
 
     @Override
     public String toString() {
