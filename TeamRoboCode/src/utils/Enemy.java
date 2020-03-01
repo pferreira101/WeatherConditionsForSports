@@ -5,6 +5,7 @@ import robocode.ScannedRobotEvent;
 import java.io.Serializable;
 
 public class Enemy  implements Serializable {
+
     double bearing;
     double distance;
     double energy;
