@@ -16,6 +16,7 @@ import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class TeamLeader extends TeamRobot {
     private Enemy target;
+    private Enemy attacker;
 
     Map<String, Position> teamPositions = new HashMap<>();
     Map<String, Enemy> enemies = new HashMap<>();
@@ -84,6 +85,8 @@ public class TeamLeader extends TeamRobot {
         if (isTeammate(event.getName())) {
             if (event.getBearing() > -90 && event.getBearing() <= 90) {
                 back(100);
+                turnRight(50);
+                ahead(100);
             } else {
                 ahead(100);
             }
@@ -112,6 +115,13 @@ public class TeamLeader extends TeamRobot {
             aliveDroids--;
             this.teamPositions.remove(e.getName());
         }
+    }
+
+    public void onHitByBullet(HitByBulletEvent e){
+        Enemy enemy = new Enemy();
+        enemy.setName(e.getName());
+        attacker = enemy;
+        requestHelp(attacker);
     }
 
     public void onDeath(DeathEvent event){
@@ -221,6 +231,16 @@ public class TeamLeader extends TeamRobot {
         try {
             broadcastMessage(msg);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void requestHelp(Enemy attacker) {
+        Message msg = new Message(Message.HELP,attacker);
+
+        try{
+            broadcastMessage(msg);
+        } catch (IOException e){
             e.printStackTrace();
         }
     }

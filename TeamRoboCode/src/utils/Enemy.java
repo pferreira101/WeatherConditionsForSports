@@ -89,9 +89,10 @@ public class Enemy implements Serializable {
         position = pos;
     }
 
-
     @Override
     public String toString() {
         return "Nome: " + name;
     }
+
+    public void setName(String name) { this.name = name; }
 }

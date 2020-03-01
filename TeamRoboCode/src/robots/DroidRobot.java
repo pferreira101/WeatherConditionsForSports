@@ -46,6 +46,8 @@ public class DroidRobot extends TeamRobot implements Droid {
         if (isTeammate(e.getName())) {
             if (e.getBearing() > -90 && e.getBearing() <= 90) {
                 back(100);
+                turnRight(50);
+                ahead(100);
             } else {
                 ahead(100);
             }
@@ -86,7 +88,12 @@ public class DroidRobot extends TeamRobot implements Droid {
         if (distance > 150) {
 
             turnGunRight(gunTurnAmt);
-            turnRight(turnAmt);
+
+            if(this.getName().equals("robots.DroidRobot1*"))
+                turnRight(turnAmt + 20);
+            else {
+                turnRight(turnAmt - 20);
+            }
 
             ahead(distance - 140);
             return;

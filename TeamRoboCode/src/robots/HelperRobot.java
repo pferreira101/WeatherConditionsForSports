@@ -39,7 +39,7 @@ public class HelperRobot extends TeamRobot {
             Enemy enemy = new Enemy(e, position);
             enemies.put(e.getName(), enemy);
 
-            if(!fighting && enemies.values().size() == aliveEnemies){
+            if(!helpMode && !fighting && enemies.values().size() == aliveEnemies){
                 target = selectTarget();
                 System.out.println("Escolhi primeiro inimigo");
                 fighting = true;
