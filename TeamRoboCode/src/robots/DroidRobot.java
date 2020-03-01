@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+import static robocode.Rules.MAX_BULLET_POWER;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 import static utils.Math.distanceBetween2Points;
 
@@ -59,6 +60,11 @@ public class DroidRobot extends TeamRobot implements Droid {
         }
     }
 
+    public void onHitByBullet(HitByBulletEvent event){
+        turnRight(30);
+        ahead(50);
+    }
+
     public void onRobotDeath(RobotDeathEvent e) {
         if (e.getName().equals(target.getName())) {
             target.reset();
@@ -85,7 +91,7 @@ public class DroidRobot extends TeamRobot implements Droid {
         double gunTurnAmt = normalRelativeAngleDegrees(theta - getGunHeading());
         double turnAmt = normalRelativeAngleDegrees(theta - getHeading());
 
-        if (distance > 150) {
+        if (distance > 400) {
 
             turnGunRight(gunTurnAmt);
 
@@ -95,8 +101,7 @@ public class DroidRobot extends TeamRobot implements Droid {
                 turnRight(turnAmt - 20);
             }
 
-            ahead(distance - 140);
-            return;
+            ahead(distance - 250);
         }
 
         // Our target is close.
@@ -104,7 +109,7 @@ public class DroidRobot extends TeamRobot implements Droid {
 
         // if the gun is cool and we're pointed at the target, shoot!
         if (getGunHeat() == 0 && java.lang.Math.abs(getGunTurnRemaining()) < 30)
-            fire(java.lang.Math.min(400 / distance, 3));
+            fire(MAX_BULLET_POWER);
 
     }
 

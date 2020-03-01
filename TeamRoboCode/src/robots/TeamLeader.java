@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+import static robocode.Rules.MAX_BULLET_POWER;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class TeamLeader extends TeamRobot {
@@ -21,6 +22,7 @@ public class TeamLeader extends TeamRobot {
     Map<String, Position> teamPositions = new HashMap<>();
     Map<String, Enemy> enemies = new HashMap<>();
 
+    int moveDirection = 1;
     int aliveDroids = 2;
     int msgsReceived = 0;
     int aliveEnemies = 4;
@@ -134,32 +136,28 @@ public class TeamLeader extends TeamRobot {
 
 
     void attack(Enemy target) {
-        double gunTurnAmt = normalRelativeAngleDegrees(target.getBearing() + getHeading() - getGunHeading());
 
-        if (target.getDistance() > 150) {
+        // switch directions if we've stopped
+        if (getVelocity() == 0)
+            moveDirection *= -1;
 
-            turnGunRight(gunTurnAmt);
-            turnRight(target.getBearing());
+        // always square off against our enemy
+        setTurnRight(normalizeBearing(target.getBearing() + 90 - (15 * moveDirection)));
 
-            ahead(target.getDistance() - 125);
-            return;
+        // strafe by changing direction every 5 ticks
+        if (getTime() % 5 == 0) {
+            moveDirection *= -1;
+            setAhead(4000 * moveDirection);
         }
+
+        double gunTurnAmt = normalRelativeAngleDegrees(target.getBearing() + getHeading() - getGunHeading());
 
         // Our target is close.
         setTurnGunRight(gunTurnAmt);
 
         // if the gun is cool and we're pointed at the target, shoot!
         if (getGunHeat() == 0 && Math.abs(getGunTurnRemaining()) < 30)
-            setFire(Math.min(400 / target.getDistance(), 3));
-
-        // Our target is too close!  Back up.
-        if (target.getDistance() < 100) {
-            if (target.getBearing() > -90 && target.getBearing() <= 90) {
-                back(40);
-            } else {
-                ahead(40);
-            }
-        }
+            setFire(MAX_BULLET_POWER);
 
         scan();
     }
@@ -196,6 +194,12 @@ public class TeamLeader extends TeamRobot {
         double enemyY = getY() + e.getDistance() * java.lang.Math.cos(java.lang.Math.toRadians(enemyBearing));
 
         return new Position(enemyX, enemyY);
+    }
+
+    double normalizeBearing(double angle) {
+        while (angle > 180) angle -= 360;
+        while (angle < -180) angle += 360;
+        return angle;
     }
 
 
