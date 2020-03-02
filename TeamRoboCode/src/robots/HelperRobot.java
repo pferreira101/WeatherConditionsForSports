@@ -101,11 +101,6 @@ public class HelperRobot extends TeamRobot {
         }
     }
 
-    public void onHitByBullet(HitByBulletEvent event){
-        turnRight(90);
-        ahead(50);
-    }
-
 
     public void onRobotDeath(RobotDeathEvent e) {
 
