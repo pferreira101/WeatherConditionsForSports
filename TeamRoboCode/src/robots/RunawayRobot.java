@@ -4,6 +4,7 @@ import robocode.*;
 import utils.Enemy;
 import utils.Position;
 
+import static robocode.Rules.MAX_BULLET_POWER;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 
@@ -76,7 +77,7 @@ public class RunawayRobot extends AdvancedRobot {
 
         // if the gun is cool and we're pointed at the enemy, shoot!
         if (getGunHeat() == 0 && Math.abs(getGunTurnRemaining()) < 30)
-            fire(Math.min(400 / enemy.getDistance(), 3));
+            fire(MAX_BULLET_POWER);
 
     }
 
