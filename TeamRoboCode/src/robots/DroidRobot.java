@@ -18,7 +18,13 @@ import static utils.Math.distanceBetween2Points;
 public class DroidRobot extends TeamRobot implements Droid {
     Enemy target;
     boolean fighting = false;
+    boolean teamLeaderDead = false;
+    boolean helperDead = false;
+    boolean peek = false;
+    boolean wallMode = false;
     int moveDirection = 1;
+    double moveAmount = 0;
+    static int corner = 0; // Which corner we are currently using
 
     public void run() {
         sendPositionToTeammates();
@@ -53,15 +59,11 @@ public class DroidRobot extends TeamRobot implements Droid {
             }
         }
         else{
+            System.out.println("ENTREI");
             turnRight(e.getBearing());
             fire(3);
             ahead(40);
         }
-    }
-
-    public void onHitByBullet(HitByBulletEvent event){
-        turnRight(30);
-        ahead(50);
     }
 
     public void onRobotDeath(RobotDeathEvent e) {
@@ -72,6 +74,22 @@ public class DroidRobot extends TeamRobot implements Droid {
         }
         if (isTeammate(e.getName())) {
             System.out.println("Aliado morreu " + e.getName());
+        }
+
+        if(e.getName().equals("robots.TeamLeader*")){
+            teamLeaderDead = true;
+            if(helperDead) {
+                wallMode = true;
+                goToWall();
+            }
+        }
+
+        if(e.getName().equals("robots.HelperRobot*")){
+            helperDead = true;
+            if(teamLeaderDead) {
+                wallMode = true;
+                goToWall();
+            }
         }
     }
 
@@ -110,6 +128,23 @@ public class DroidRobot extends TeamRobot implements Droid {
         if (getGunHeat() == 0 && java.lang.Math.abs(getGunTurnRemaining()) < 30)
             fire(MAX_BULLET_POWER);
 
+    }
+
+    public void goToWall() {
+        moveAmount = java.lang.Math.max(getBattleFieldWidth(), getBattleFieldHeight());
+        turnLeft(getHeading() % 90);
+        ahead(moveAmount);
+        // Turn the gun to turn right 90 degrees.
+        peek = true;
+        turnGunRight(90);
+        turnRight(90);
+
+        while (true) {
+            if (wallMode) {
+                ahead(moveAmount);
+                turnRight(90);
+            }
+        }
     }
 
 
