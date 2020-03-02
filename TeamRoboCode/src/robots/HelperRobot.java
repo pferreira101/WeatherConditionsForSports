@@ -48,7 +48,6 @@ public class HelperRobot extends TeamRobot {
             if(teamleader){
                 if(!fighting){
                     target = selectTarget();
-                    System.out.println("Escolhi inimigo " + target.toString());
                     orderAttack(target);
                     fighting = true;
                     attack();
@@ -64,19 +63,16 @@ public class HelperRobot extends TeamRobot {
                 if(!helpMode){
                     if(scannedEnemies >= enemiesToScan && !fighting){
                         target = selectTarget();
-                        System.out.println("! HELP Target escolhido " + target.getName());
                         fighting = true;
                         attack();
                     }
                     else if(fighting && e.getName().equals(target.getName())) {
                         target.update(e, position);
-                        System.out.println("! HELP contra " + target.getName());
                         attack();
                     }
                 }else{
                     if(e.getName().equals(target.getName())) {
                         target.update(e,position);
-                        System.out.println("HELP contra " + target.getName());
                         attack();
                     }
                 }
@@ -89,6 +85,7 @@ public class HelperRobot extends TeamRobot {
 
         switch (message.getTipo()) {
             case Message.HELP:
+                target = this.enemies.get(message.getTarget().getName());
                 helpMode = true;
                 fighting = true;
                 break;
@@ -107,7 +104,6 @@ public class HelperRobot extends TeamRobot {
 
         if(!isTeammate(e.getName())) {
             if(teamleader) {
-                System.out.println("MORTE1");
                 target.reset();
                 enemies.remove(e.getName());
                 enemiesToScan = --aliveEnemies;
@@ -115,7 +111,6 @@ public class HelperRobot extends TeamRobot {
                 fighting = false;
                 helpMode = false;
             } else {
-                System.out.println("MORTE2");
                 target.reset();
                 enemies.remove(e.getName());
                 fighting = false;
@@ -185,8 +180,6 @@ public class HelperRobot extends TeamRobot {
 
 
     public void orderAttack(Enemy enemy) {
-
-        System.out.println("A mandar atacar");
 
         Message msg = new Message(Message.ATTACK, enemy);
 

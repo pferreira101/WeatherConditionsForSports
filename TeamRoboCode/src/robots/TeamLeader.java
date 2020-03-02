@@ -52,8 +52,6 @@ public class TeamLeader extends TeamRobot {
                 scannedEnemies++;
             }
 
-            //System.out.println("Inimigo detetado. "+ this.scannedEnemies + " ||  " + msgsReceived);
-
             if (scannedEnemies >= enemiesToScan && msgsReceived >= aliveDroids) {
                 fighting = true;
                 target = selectTarget();
@@ -80,7 +78,6 @@ public class TeamLeader extends TeamRobot {
             case Message.INFO:
                 msgsReceived++;
                 teamPositions.put(message.getSender(), message.getPosition());
-                //System.out.println("Mensagem recebida de " + message.getSender() + " com a posicao " + message.getPosition().toString());
                 break;
         }
     }
@@ -113,8 +110,6 @@ public class TeamLeader extends TeamRobot {
             requestInfo();
         }
         if (isTeammate(e.getName()) && e.getName().contains("Droid")) {
-            System.out.println("Morreu droid");
-            //System.out.println("Aliado morreu " + e.getName());
             aliveDroids--;
             this.teamPositions.remove(e.getName());
         }
@@ -167,20 +162,16 @@ public class TeamLeader extends TeamRobot {
         Enemy selected = null;
         teamPositions.put(getName(), new Position(getX(), getY()));
         for (Enemy enemy : enemies.values()) {
-            System.out.println("Inimigo: " + enemy.getName());
             for (Position teammate : teamPositions.values()) {
                 double distance = utils.Math.distanceBetween2Points(enemy.getPosition().getX(), enemy.getPosition().getY(), teammate.getX(), teammate.getY());
-                //System.out.println("distancia parcial: " + distance );
                 totalDistance += distance;
             }
-            System.out.println("Distancia total: " + totalDistance);
             if (totalDistance < minTotalDistance) {
                 minTotalDistance = totalDistance;
                 selected = enemy;
             }
         }
 
-        System.out.println("A atacar " + selected.getName());
         return selected;
     }
 
@@ -199,8 +190,6 @@ public class TeamLeader extends TeamRobot {
     // ########################## Comunicação ##########################
 
     public void orderAttack(Enemy enemy) {
-
-        System.out.println("A mandar atacar");
 
         Message msg = new Message(Message.ATTACK, enemy);
 

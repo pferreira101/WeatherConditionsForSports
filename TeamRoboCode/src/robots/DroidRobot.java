@@ -40,7 +40,6 @@ public class DroidRobot extends TeamRobot implements Droid {
         Message message = (Message) event.getMessage();
         switch (message.getTipo()) {
             case Message.ATTACK:
-                System.out.println("Recebi mensagem para atacar");
                 target = message.getTarget();
                 attack(target);
                 break;
@@ -59,7 +58,6 @@ public class DroidRobot extends TeamRobot implements Droid {
             }
         }
         else{
-            System.out.println("ENTREI");
             turnRight(e.getBearing());
             fire(3);
             ahead(40);
@@ -71,9 +69,6 @@ public class DroidRobot extends TeamRobot implements Droid {
             target.reset();
             fighting = false;
 
-        }
-        if (isTeammate(e.getName())) {
-            System.out.println("Aliado morreu " + e.getName());
         }
 
         if(e.getName().equals("robots.TeamLeader*")){
@@ -153,7 +148,6 @@ public class DroidRobot extends TeamRobot implements Droid {
     public void sendPositionToTeammates() {
 
         Message msg = new Message(getName(), Message.INFO, new Position(this.getX(), this.getY()));
-        System.out.println("Enviei mensagem");
         try {
             broadcastMessage(msg);
         } catch (IOException e) {
