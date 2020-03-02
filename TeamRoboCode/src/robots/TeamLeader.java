@@ -29,6 +29,7 @@ public class TeamLeader extends TeamRobot {
     int enemiesToScan = aliveEnemies;
     int scannedEnemies = 0;
     boolean fighting = false;
+    boolean changedLeader = false;
 
 
     public void run() {
@@ -44,7 +45,7 @@ public class TeamLeader extends TeamRobot {
     public void onScannedRobot(ScannedRobotEvent e) {
         Position position = detectPosition(e);
 
-        if (!fighting) {
+        if (!fighting && !changedLeader) {
 
             if (!isTeammate(e.getName())) {
                 Enemy enemy = new Enemy(e, position);
@@ -66,6 +67,12 @@ public class TeamLeader extends TeamRobot {
                 orderAttack(target);
                 attack(target);
             }
+        }
+
+
+        if(changedLeader == false && getEnergy()<=20.0) {
+            changeLeader();
+            changedLeader = true;
         }
 
 
@@ -120,16 +127,14 @@ public class TeamLeader extends TeamRobot {
     }
 
     public void onHitByBullet(HitByBulletEvent e){
-        Enemy enemy = new Enemy();
-        enemy.setName(e.getName());
-        attacker = enemy;
-        requestHelp(attacker);
+        if(!isTeammate(e.getName())) {
+            Enemy enemy = new Enemy();
+            enemy.setName(e.getName());
+            attacker = enemy;
+            requestHelp(attacker);
+        }
     }
 
-    public void onDeath(DeathEvent event){
-        System.out.println("Teamleader morto");
-        changeLeader();
-    }
 
 
     // ########################## Ações ##########################
@@ -142,7 +147,7 @@ public class TeamLeader extends TeamRobot {
             moveDirection *= -1;
 
         // always square off against our enemy
-        setTurnRight(normalizeBearing(target.getBearing() + 90 - (15 * moveDirection)));
+        setTurnRight(utils.Math.normalizeBearing(target.getBearing() + 90 - (15 * moveDirection)));
 
         // strafe by changing direction every 5 ticks
         if (getTime() % 5 == 0) {
@@ -194,12 +199,6 @@ public class TeamLeader extends TeamRobot {
         double enemyY = getY() + e.getDistance() * java.lang.Math.cos(java.lang.Math.toRadians(enemyBearing));
 
         return new Position(enemyX, enemyY);
-    }
-
-    double normalizeBearing(double angle) {
-        while (angle > 180) angle -= 360;
-        while (angle < -180) angle += 360;
-        return angle;
     }
 
 

@@ -14,16 +14,17 @@ import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 public class HelperRobot extends TeamRobot {
 
-    Enemy target = new Enemy();
+    Enemy target;
     Map<String, Enemy> enemies = new HashMap<>();
-    int aliveEnemies = 4;
 
     int moveDirection = 1;
-
     boolean helpMode = false;
     boolean teamleader = false;
     boolean fighting = false;
     boolean choosenTarget = false;
+    int aliveEnemies = 4;
+    int enemiesToScan = aliveEnemies;
+    int scannedEnemies = 0;
 
     public void run() {
         setAdjustRadarForRobotTurn(true);
@@ -35,33 +36,49 @@ public class HelperRobot extends TeamRobot {
 
     public void onScannedRobot(ScannedRobotEvent e) {
 
-        if (!isTeammate(e.getName())) {
-            Position position = detectPosition(e);
-            if(teamleader){
-                Enemy enemy = new Enemy(e, position);
-                enemies.put(e.getName(), enemy);
+        Position position = detectPosition(e);
 
-                if(!fighting && enemies.values().size() == aliveEnemies){
+        if (!isTeammate(e.getName())) {
+
+            // Meet enemies
+            if(!choosenTarget){
+                Enemy enemy = new Enemy(e, position);
+                enemies.put(e.getName(),enemy);
+                scannedEnemies++;
+            }
+
+            if(teamleader && enemies.values().size() == aliveEnemies){
+                if(!fighting){
                     fighting = true;
                     target = selectTarget();
-                    System.out.println("Escolhi primeiro inimigo");
+                    System.out.println("Escolhi inimigo " + target.toString());
                     orderAttack(target);
+                    enemies.clear();
+                    attack();
                 }
-
+                else{
+                    if(e.getName().equals(target.getName())){
+                        target.update(e, position);
+                        orderAttack(target);
+                        attack();
+                    }
+                }
             } else{
                 if(!helpMode){
-                    if(e.getName().equals(target.getName())) {
-                        System.out.println("! HELP contra " + target.getName());
+                    if(choosenTarget && e.getName().equals(target.getName())) {
+                        //System.out.println("! HELP contra " + target.getName());
                         target.update(e, position);
+                        attack();
                     }
-                    if (choosenTarget == false && e.getDistance() <= 250) {
+                    if (!choosenTarget && scannedEnemies >= enemiesToScan) {
+                        target = selectTarget();
                         System.out.println("! HELP Target escolhido " + target.getName());
-                        target.update(e,position);
                         choosenTarget = true;
+                        enemies.clear();
+                        attack();
                     }
-                    attack();
                 }else{
-                    if(e.getName().equals(target.getName()) && e.getDistance() <= 300) {
+                    if(choosenTarget && e.getName().equals(target.getName())) {
                         System.out.println("HELP contra " + target.getName());
                         target.update(e,position);
                         attack();
@@ -76,38 +93,43 @@ public class HelperRobot extends TeamRobot {
 
         switch (message.getTipo()) {
             case Message.HELP:
-                System.out.println("HELP RECEBIDO");
                 target = message.getTarget();
+                choosenTarget = true;
                 helpMode = true;
                 break;
 
             case Message.CHANGELEADER:
-                System.out.println("CHANGELEADER RECEBIDO");
                 helpMode = false;
                 target = selectTarget();
+                choosenTarget = true;
                 teamleader = true;
                 break;
         }
     }
 
+    public void onHitByBullet(HitByBulletEvent event){
+        turnRight(30);
+        ahead(50);
+    }
+
 
     public void onRobotDeath(RobotDeathEvent e) {
 
-        System.out.println("MORTE");
-
         if(!isTeammate(e.getName())) {
             if(teamleader) {
+                System.out.println("MORTE1");
+                fighting = false;
+                target.reset();
+                choosenTarget = false;
                 enemies.remove(target.getName());
-                aliveEnemies--;
+                enemiesToScan = --aliveEnemies;
+                scannedEnemies = 0;
             }
             if (e.getName().equals(target.getName())) {
+                System.out.println("MORTE2");
                 target.reset();
                 choosenTarget = false;
                 helpMode = false;
-                if(teamleader){
-                    target = selectTarget();
-                    orderAttack(target);
-                }
             }
         }
 
@@ -137,7 +159,7 @@ public class HelperRobot extends TeamRobot {
 
         // if the gun is cool and we're pointed at the target, shoot!
         if (getGunHeat() == 0 && Math.abs(getGunTurnRemaining()) < 30)
-            setFire(Math.min(400 / target.getDistance(), 3));
+            fire(MAX_BULLET_POWER);
 
     }
 
