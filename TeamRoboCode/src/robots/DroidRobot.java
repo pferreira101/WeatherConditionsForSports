@@ -18,6 +18,7 @@ import static utils.Math.distanceBetween2Points;
 public class DroidRobot extends TeamRobot implements Droid {
     Enemy target;
     boolean fighting = false;
+    int moveDirection = 1;
 
     public void run() {
         sendPositionToTeammates();
@@ -46,8 +47,6 @@ public class DroidRobot extends TeamRobot implements Droid {
     public void onHitRobot(HitRobotEvent e) {
         if (isTeammate(e.getName())) {
             if (e.getBearing() > -90 && e.getBearing() <= 90) {
-                back(100);
-                turnRight(50);
                 ahead(100);
             } else {
                 ahead(100);
@@ -91,17 +90,17 @@ public class DroidRobot extends TeamRobot implements Droid {
         double gunTurnAmt = normalRelativeAngleDegrees(theta - getGunHeading());
         double turnAmt = normalRelativeAngleDegrees(theta - getHeading());
 
-        if (distance > 400) {
+        // switch directions if we've stopped
+        if (getVelocity() == 0)
+            moveDirection *= -1;
 
-            turnGunRight(gunTurnAmt);
+        // always square off against our enemy
+        setTurnRight(utils.Math.normalizeBearing(target.getBearing() + 90 - (15 * moveDirection)));
 
-            if(this.getName().equals("robots.DroidRobot1*"))
-                turnRight(turnAmt + 20);
-            else {
-                turnRight(turnAmt - 20);
-            }
-
-            ahead(distance - 250);
+        // strafe by changing direction every 5 ticks
+        if (getTime() % 5 == 0) {
+            moveDirection *= -1;
+            setAhead(4000 * moveDirection);
         }
 
         // Our target is close.
