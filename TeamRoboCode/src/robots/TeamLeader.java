@@ -29,7 +29,6 @@ public class TeamLeader extends TeamRobot {
     int enemiesToScan = aliveEnemies;
     int scannedEnemies = 0;
     boolean fighting = false;
-    boolean changedLeader = false;
 
 
     public void run() {
@@ -45,7 +44,7 @@ public class TeamLeader extends TeamRobot {
     public void onScannedRobot(ScannedRobotEvent e) {
         Position position = detectPosition(e);
 
-        if (!fighting && !changedLeader) {
+        if (!fighting) {
 
             if (!isTeammate(e.getName())) {
                 Enemy enemy = new Enemy(e, position);
@@ -70,10 +69,6 @@ public class TeamLeader extends TeamRobot {
         }
 
 
-        if(changedLeader == false && getEnergy()<=20.0) {
-            changeLeader();
-            changedLeader = true;
-        }
 
 
     }
@@ -107,10 +102,9 @@ public class TeamLeader extends TeamRobot {
 
     public void onRobotDeath(RobotDeathEvent e) {
         if(!isTeammate(e.getName()))
-            enemies.remove(target.getName());
+            enemies.remove(e.getName());
 
         if (e.getName().equals(target.getName())) {
-            enemies.remove(target.getName());
             target.reset();
             fighting = false;
             enemiesToScan = --aliveEnemies;
@@ -220,16 +214,6 @@ public class TeamLeader extends TeamRobot {
 
     public void requestInfo() {
         Message msg = new Message(Message.REQUEST_INFO);
-
-        try {
-            broadcastMessage(msg);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void changeLeader() {
-        Message msg = new Message(Message.CHANGELEADER);
 
         try {
             broadcastMessage(msg);

@@ -45,7 +45,7 @@ public class HelperRobot extends TeamRobot {
             scannedEnemies++;
 
 
-            if(teamleader && enemies.values().size() == aliveEnemies){
+            if(teamleader){
                 if(!fighting){
                     target = selectTarget();
                     System.out.println("Escolhi inimigo " + target.toString());
@@ -102,28 +102,33 @@ public class HelperRobot extends TeamRobot {
     }
 
     public void onHitByBullet(HitByBulletEvent event){
-        turnRight(30);
+        turnRight(90);
         ahead(50);
     }
 
 
     public void onRobotDeath(RobotDeathEvent e) {
 
+
         if(!isTeammate(e.getName())) {
             if(teamleader) {
                 System.out.println("MORTE1");
-                fighting = false;
                 target.reset();
-                enemies.remove(target.getName());
+                enemies.remove(e.getName());
                 enemiesToScan = --aliveEnemies;
                 scannedEnemies = 0;
-            }
-            if (e.getName().equals(target.getName())) {
+                fighting = false;
+                helpMode = false;
+            } else {
                 System.out.println("MORTE2");
                 target.reset();
+                enemies.remove(e.getName());
                 fighting = false;
                 helpMode = false;
             }
+        } else if(e.getName().contains("TeamLeader")){
+            fighting = false;
+            teamleader = true;
         }
 
     }
