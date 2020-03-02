@@ -21,7 +21,6 @@ public class HelperRobot extends TeamRobot {
     boolean helpMode = false;
     boolean teamleader = false;
     boolean fighting = false;
-    boolean choosenTarget = false;
     int aliveEnemies = 4;
     int enemiesToScan = aliveEnemies;
     int scannedEnemies = 0;
@@ -41,19 +40,17 @@ public class HelperRobot extends TeamRobot {
         if (!isTeammate(e.getName())) {
 
             // Meet enemies
-            if(!choosenTarget){
-                Enemy enemy = new Enemy(e, position);
-                enemies.put(e.getName(),enemy);
-                scannedEnemies++;
-            }
+            Enemy enemy = new Enemy(e, position);
+            enemies.put(e.getName(),enemy);
+            scannedEnemies++;
+
 
             if(teamleader && enemies.values().size() == aliveEnemies){
                 if(!fighting){
-                    fighting = true;
                     target = selectTarget();
                     System.out.println("Escolhi inimigo " + target.toString());
                     orderAttack(target);
-                    enemies.clear();
+                    fighting = true;
                     attack();
                 }
                 else{
@@ -65,22 +62,21 @@ public class HelperRobot extends TeamRobot {
                 }
             } else{
                 if(!helpMode){
-                    if(choosenTarget && e.getName().equals(target.getName())) {
-                        //System.out.println("! HELP contra " + target.getName());
-                        target.update(e, position);
-                        attack();
-                    }
-                    if (!choosenTarget && scannedEnemies >= enemiesToScan) {
+                    if(scannedEnemies >= enemiesToScan && !fighting){
                         target = selectTarget();
                         System.out.println("! HELP Target escolhido " + target.getName());
-                        choosenTarget = true;
-                        enemies.clear();
+                        fighting = true;
+                        attack();
+                    }
+                    else if(fighting) {
+                        target.update(e, position);
+                        System.out.println("! HELP contra " + target.getName());
                         attack();
                     }
                 }else{
-                    if(choosenTarget && e.getName().equals(target.getName())) {
-                        System.out.println("HELP contra " + target.getName());
+                    if(e.getName().equals(target.getName())) {
                         target.update(e,position);
+                        System.out.println("HELP contra " + target.getName());
                         attack();
                     }
                 }
@@ -93,15 +89,13 @@ public class HelperRobot extends TeamRobot {
 
         switch (message.getTipo()) {
             case Message.HELP:
-                target = message.getTarget();
-                choosenTarget = true;
                 helpMode = true;
+                fighting = true;
                 break;
 
             case Message.CHANGELEADER:
                 helpMode = false;
-                target = selectTarget();
-                choosenTarget = true;
+                fighting = false;
                 teamleader = true;
                 break;
         }
@@ -120,7 +114,6 @@ public class HelperRobot extends TeamRobot {
                 System.out.println("MORTE1");
                 fighting = false;
                 target.reset();
-                choosenTarget = false;
                 enemies.remove(target.getName());
                 enemiesToScan = --aliveEnemies;
                 scannedEnemies = 0;
@@ -128,7 +121,7 @@ public class HelperRobot extends TeamRobot {
             if (e.getName().equals(target.getName())) {
                 System.out.println("MORTE2");
                 target.reset();
-                choosenTarget = false;
+                fighting = false;
                 helpMode = false;
             }
         }
