@@ -68,7 +68,7 @@ public class HelperRobot extends TeamRobot {
                         fighting = true;
                         attack();
                     }
-                    else if(fighting) {
+                    else if(fighting && e.getName().equals(target.getName())) {
                         target.update(e, position);
                         System.out.println("! HELP contra " + target.getName());
                         attack();
