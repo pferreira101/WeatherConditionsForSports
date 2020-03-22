@@ -28,17 +28,17 @@ pp.pprint(response)
 
 # ------------- response handling  -------------
 
-worksheet.write(row, column, "time")
-worksheet.write(row+1, column, response["uv_time"])
-column += 1
-worksheet.write(row, column, "uv")
-worksheet.write(row+1, column, response["uv"])
-column += 1
-worksheet.write(row, column, "day_max_uv")
-worksheet.write(row+1, column, response["uv_max"])
-column += 1
-worksheet.write(row, column, "day_max_uv_time")
-worksheet.write(row+1, column, response["uv_max_time"])
+uv_data = {
+    'time' : 'uv_time',
+    'uv' : 'uv',
+    'day_max_uv' : 'uv_max',
+    'day_max_uv_time' : 'uv_max_time'
+}
+
+for name, id in uv_data.items():
+    worksheet.write(row, column, name)
+    worksheet.write(row+1, column, response[id])
+    column += 1
 
 exposure_time = response["safe_exposure_time"]
 for st, max_time in exposure_time.items():
