@@ -1,4 +1,5 @@
 import requests
+import config
 from firebase_admin import auth
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -8,8 +9,7 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
 
-cred = credentials.Certificate(
-    "sa-tp2-1920-firebase-adminsdk-l7g7d-8d43ec8c21.json")
+cred = credentials.Certificate(config.firestore_key)
 
 # Initialize the default app
 default_app = firebase_admin.initialize_app(cred)
