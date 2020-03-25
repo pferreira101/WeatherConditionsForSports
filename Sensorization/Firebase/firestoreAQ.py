@@ -9,7 +9,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 
 cred = credentials.Certificate(
-    "sa-tp2-1920-firebase-adminsdk-l7g7d-4c1619d60e.json")
+    "sa-tp2-1920-firebase-adminsdk-l7g7d-8d43ec8c21.json")
 
 # Initialize the default app
 default_app = firebase_admin.initialize_app(cred)
