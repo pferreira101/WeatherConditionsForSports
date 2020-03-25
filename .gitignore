@@ -7,6 +7,8 @@ TeamRoboCode/TeamRoboCode.iml
 TeamRoboCode/.DS_Store
 .idea/*
 .DS_Store
-Sensorization/config.py
-Sensorization/__pycache__
-Sensorization/*.xls*
+Sensorization/Excel/*.xls*
+Sensorization/Excel/__pycache__
+Sensorization/Excel/config.py
+Sensorization/Firebase/__pycache__
+Sensorization/Firebase/config.py

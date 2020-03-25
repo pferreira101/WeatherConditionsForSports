@@ -13,7 +13,7 @@ worksheet = workbook.add_worksheet("Data")
 row = 0
 column = 0
 
-# ------------- request openweathermap  -------------
+# ------------- request openAQ  -------------
 
 city_id = "PT01042"  # Braga
 
