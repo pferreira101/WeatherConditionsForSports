@@ -1,5 +1,7 @@
 import requests
 import config
+from datetime import datetime
+import pytz
 from firebase_admin import auth
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -44,12 +46,15 @@ humidity = weather_stats["humidity"]
 wind_stats = response["wind"]
 speed = wind_stats["speed"]
 deg = wind_stats["deg"]
-gust = wind_stats["gust"]
 
+timestamp = response["dt"]
+time_zone = pytz.timezone('Europe/Lisbon')
 
 # ------------- Save data -------------
 
-doc_ref = db.collection(u'WM').document(f'?key?')
+date_time = (datetime.fromtimestamp(timestamp,time_zone)).isoformat()
+
+doc_ref = db.collection(u'WM').document(f'{date_time}')
 
 doc_ref.set({
     u'general_weather': f'{general_weather}',
@@ -60,7 +65,6 @@ doc_ref.set({
     u'humidity': f'{humidity}',
     u'wind_speed': f'{speed}',
     u'wind_deg': f'{deg}',
-    u'wind_gust': f'{gust}',
 })
 
 
