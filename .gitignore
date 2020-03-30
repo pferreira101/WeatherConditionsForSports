@@ -13,3 +13,7 @@ Sensorization/Excel/config.py
 Sensorization/Firebase/__pycache__
 Sensorization/Firebase/config.py
 Sensorization/Firebase/sa-tp2-1920-firebase-adminsdk*
+Sensorization/__pycache__*
+config.py
+firebase_key.json
+*.xlsx

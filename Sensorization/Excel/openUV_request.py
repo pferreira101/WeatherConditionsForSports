@@ -1,6 +1,8 @@
+import sys
+sys.path.append("../")
+from Sensorization import config
 import requests
 import xlsxwriter
-import config
 import pprint
 
 pp = pprint.PrettyPrinter(indent=4)

@@ -1,9 +1,9 @@
+import sys
+sys.path.append("../")
+from Sensorization import config
 import requests
-import config
-from firebase_admin import auth
 import firebase_admin
-from firebase_admin import credentials, auth
-from firebase_admin import firestore
+from firebase_admin import auth, credentials, firestore
 import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
