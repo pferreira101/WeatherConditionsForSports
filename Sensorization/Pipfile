@@ -4,12 +4,15 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+ipykernel = "*"
+autopep8 = "*"
 
 [packages]
 requests = "*"
 xlsxwriter = "*"
 pprint = "*"
 firebase-admin = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.7"

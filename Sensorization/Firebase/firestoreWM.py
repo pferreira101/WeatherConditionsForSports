@@ -71,8 +71,8 @@ doc_ref.set({
 
 # ------------- Get data -------------
 
-aq_ref = db.collection(u'WM')
-docs = aq_ref.stream()
+wm_ref = db.collection(u'WM')
+docs = wm_ref.stream()
 
 for doc in docs:
     print(u'{} => {}'.format(doc.id, doc.to_dict()))
