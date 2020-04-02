@@ -13,6 +13,8 @@ xlsxwriter = "*"
 pprint = "*"
 firebase-admin = "*"
 pandas = "*"
+seaborn = "*"
+re = "*"
 
 [requires]
 python_version = "3.7"
