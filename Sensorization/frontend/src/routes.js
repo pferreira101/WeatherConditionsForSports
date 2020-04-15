@@ -16,11 +16,19 @@
 
 */
 import Climate from "views/Climate.js";
+import Weather from "views/Weather.js"
 import BestPractice from "views/BestPractice.js";
 import Map from "views/Map.js";
 import TableList from "views/TableList.js";
 
 var routes = [
+  {
+    path: "/weather",
+    name: "Weather",
+    icon: "tim-icons icon-world",
+    component: Weather,
+    layout: "/admin",
+  },
   {
     path: "/climate",
     name: "Climate",
