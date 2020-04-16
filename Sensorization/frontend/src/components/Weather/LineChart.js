@@ -94,7 +94,7 @@ let weatherChart = (canvas) => {
         pointHoverRadius: 4,
         pointHoverBorderWidth: 15,
         pointRadius: 4,
-        data: displayData === "weather" ? weather : feelsLike,
+        data: displayData === "weather" ? [...weather] : [...feelsLike],
       },
     ],
   };
@@ -103,7 +103,7 @@ let weatherChart = (canvas) => {
 let labels = [];
 let weather = [];
 let feelsLike = [];
-let displayData = "weather";
+let displayData = "";
 
 class LineChart extends React.Component {
   constructor(props) {
@@ -121,8 +121,7 @@ class LineChart extends React.Component {
     labels = this.state.labels;
     weather = this.state.weather;
     feelsLike = this.state.feelsLike;
-
-    console.log(feelsLike)
+    displayData = "weather";
   }
 
   setDisplayData = (name) => {

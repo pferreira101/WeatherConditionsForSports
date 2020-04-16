@@ -1,10 +1,9 @@
 import React from "react";
 
-// reactstrap components
-import { Spinner } from "reactstrap";
-
 // core components
-import LineChart from "components/LineChart.js";
+import {Row, Col} from "reactstrap";
+import PropagateLoader from "react-spinners/PropagateLoader";
+import LineChart from "components/Weather/LineChart.js";
 
 // firestore
 import firebase from "firebase/firestore.js";
@@ -31,7 +30,7 @@ class Weather extends React.Component {
       .then((querySnapshot) => {
         let docs = querySnapshot.docs;
         let docs_data = docs.map((doc) => doc.data());
-        console.log(docs_data);
+
         this.setState({
           ids: docs.map((doc) => doc.id),
           weatherData: docs_data.map((data) => data["temp_max"]),
@@ -46,11 +45,14 @@ class Weather extends React.Component {
       this.state.feelsLikeData.length === 0 ||
       this.state.weatherData.length === 0
     ) {
-      //isto ainda nao funciona
       return (
         <div className="content">
-          <Spinner style={{ width: "3rem", height: "3rem" }} color="danger" />
-        </div>
+        <Row>
+          <Col xs="12" className="text-center" style={{paddingTop: "30%", paddingLeft:"50%"}}>
+            <PropagateLoader color={"#1E8AF7"}/>
+          </Col>
+        </Row>
+      </div>
       );
     }
     return (
