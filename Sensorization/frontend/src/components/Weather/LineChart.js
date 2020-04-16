@@ -18,6 +18,17 @@ import { Line } from "react-chartjs-2";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
+let toHours = (docs_ids) => {
+  return docs_ids.map((id) => {
+    let date = new Date(id)
+
+    let hours = date.getHours();
+    hours = date.getMinutes() > 30 ? hours+1 : hours;
+    
+    return `${hours}:00h`; //date.getMinutes() > 30 ? hours+1 : hours;
+  })
+}
+
 let lineChartOptions = {
   maintainAspectRatio: false,
   legend: {
@@ -44,8 +55,8 @@ let lineChartOptions = {
           zeroLineColor: "transparent",
         },
         ticks: {
-          suggestedMin: 270,
-          suggestedMax: 290,
+          suggestedMin: 0,
+          suggestedMax: 35,
           padding: 20,
           fontColor: "#9a9a9a",
         },
@@ -112,12 +123,11 @@ class LineChart extends React.Component {
     this.state = {
       title: this.props.title,
       subtitle: this.props.subtitle,
-      labels: this.props.labels,
+      labels: toHours(this.props.labels),
       weather: this.props.weatherData,
       feelsLike: this.props.feelsLikeData,
       displayData: "weather",
     };
-
     labels = this.state.labels;
     weather = this.state.weather;
     feelsLike = this.state.feelsLike;

@@ -1,9 +1,10 @@
 import React from "react";
 
 // core components
-import {Row, Col} from "reactstrap";
+import { Row, Col } from "reactstrap";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import LineChart from "components/Weather/LineChart.js";
+import WeatherTable from "components/Weather/WeatherTable.js";
 
 // firestore
 import firebase from "firebase/firestore.js";
@@ -16,6 +17,9 @@ class Weather extends React.Component {
       ids: [],
       weatherData: [],
       feelsLikeData: [],
+      generalConditionData: [],
+      humidityData: [],
+      windData: []
     };
 
     this.getWeatherData();
@@ -25,7 +29,7 @@ class Weather extends React.Component {
     const db = firebase.firestore();
 
     db.collection("WM")
-      .limit(24)
+      .limit(28)
       .get()
       .then((querySnapshot) => {
         let docs = querySnapshot.docs;
@@ -33,10 +37,14 @@ class Weather extends React.Component {
 
         this.setState({
           ids: docs.map((doc) => doc.id),
-          weatherData: docs_data.map((data) => data["temp_max"]),
-          feelsLikeData: docs_data.map((data) => data["feels_like"]),
+          weatherData: docs_data.map((data) => (data["temp_max"] - 273.15).toFixed(0)),
+          feelsLikeData: docs_data.map((data) => (data["feels_like"] - 273.15).toFixed(0)),
+          generalConditionData: docs_data.map((data) => data["general_weather"]),
+          humidityData: docs_data.map((data) => data["humidity"]),
+          windData: docs_data.map((data) => data["wind_speed"]),
         });
       });
+
   }
 
   render() {
@@ -47,12 +55,12 @@ class Weather extends React.Component {
     ) {
       return (
         <div className="content">
-        <Row>
-          <Col xs="12" className="text-center" style={{paddingTop: "30%", paddingLeft:"50%"}}>
-            <PropagateLoader color={"#1E8AF7"}/>
-          </Col>
-        </Row>
-      </div>
+          <Row>
+            <Col xs="12" className="text-center" style={{ paddingTop: "30%", paddingLeft: "50%" }}>
+              <PropagateLoader color={"#1E8AF7"} />
+            </Col>
+          </Row>
+        </div>
       );
     }
     return (
@@ -64,6 +72,9 @@ class Weather extends React.Component {
           weatherData={this.state.weatherData}
           feelsLikeData={this.state.feelsLikeData}
         />
+        <Row>
+          <WeatherTable labels={this.state.ids} conditionData={this.state.generalConditionData} humidityData={this.state.humidityData} windData={this.state.windData}/>
+        </Row>
       </div>
     );
   }
