@@ -16,6 +16,8 @@ firebase-admin = "*"
 pandas = "*"
 seaborn = "*"
 re = "*"
+sklearn = "*"
+tensorflow = "*"
 
 [requires]
 python_version = "3.7"

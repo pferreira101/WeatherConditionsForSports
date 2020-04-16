@@ -16,3 +16,4 @@ Sensorization/config.py
 Sensorization/firebase_key.json
 Sensorization/__pycache__*
 Sensorization/.vscode/settings.json
+Sensorization/.ipynb_checkpoints/
