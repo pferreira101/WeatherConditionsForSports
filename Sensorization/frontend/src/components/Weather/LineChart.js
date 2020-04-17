@@ -18,7 +18,7 @@ import { Line } from "react-chartjs-2";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-let toHours = (docs_ids) => {
+let formatLabels = (docs_ids) => {
   return docs_ids.map((id) => {
     let date = new Date(id)
 
@@ -123,7 +123,7 @@ class LineChart extends React.Component {
     this.state = {
       title: this.props.title,
       subtitle: this.props.subtitle,
-      labels: toHours(this.props.labels),
+      labels: formatLabels(this.props.labels),
       weather: this.props.weatherData,
       feelsLike: this.props.feelsLikeData,
       displayData: "weather",

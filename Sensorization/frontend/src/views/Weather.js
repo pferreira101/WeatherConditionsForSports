@@ -29,25 +29,27 @@ class Weather extends React.Component {
     const db = firebase.firestore();
 
     db.collection("WM")
-      .limit(28)
       .get()
       .then((querySnapshot) => {
-        let docs = querySnapshot.docs;
+
+        let docs = querySnapshot.docs.slice(-24);
         let docs_data = docs.map((doc) => doc.data());
 
         this.setState({
           ids: docs.map((doc) => doc.id),
-          weatherData: docs_data.map((data) => (data["temp_max"] - 273.15).toFixed(0)),
+          weatherData: docs_data.map((data) => (data["temp"] - 273.15).toFixed(0)),
           feelsLikeData: docs_data.map((data) => (data["feels_like"] - 273.15).toFixed(0)),
-          generalConditionData: docs_data.map((data) => data["general_weather"]),
+          icons: docs_data.map((data) => data["icon"]),
           humidityData: docs_data.map((data) => data["humidity"]),
-          windData: docs_data.map((data) => data["wind_speed"]),
+          windSpeedData: docs_data.map((data) => data["wind_speed"]),
+          windDegData: docs_data.map((data) => data["wind_deg"]),
         });
       });
 
   }
 
   render() {
+
     if (
       this.state.ids.length === 0 ||
       this.state.feelsLikeData.length === 0 ||
@@ -73,7 +75,13 @@ class Weather extends React.Component {
           feelsLikeData={this.state.feelsLikeData}
         />
         <Row>
-          <WeatherTable labels={this.state.ids} conditionData={this.state.generalConditionData} humidityData={this.state.humidityData} windData={this.state.windData}/>
+          <WeatherTable 
+            labels={this.state.ids}
+            icons={this.state.icons}
+            humidityData={this.state.humidityData}
+            windSpeedData={this.state.windSpeedData}
+            windDegData={this.state.windDegData}
+          />
         </Row>
       </div>
     );
