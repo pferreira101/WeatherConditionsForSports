@@ -136,7 +136,7 @@ class Admin extends React.Component {
             />
             <Switch>
               {this.getRoutes(routes)}
-              <Redirect from="*" to="/admin/climate" />
+              <Redirect from="*" to="/admin/weather" />
             </Switch>
             {
               // we don't want the Footer to be rendered on map page

@@ -19,7 +19,7 @@ class Weather extends React.Component {
       feelsLikeData: [],
       generalConditionData: [],
       humidityData: [],
-      windData: []
+      windData: [],
     };
 
     this.getWeatherData();
@@ -31,25 +31,26 @@ class Weather extends React.Component {
     db.collection("WM")
       .get()
       .then((querySnapshot) => {
-
         let docs = querySnapshot.docs.slice(-24);
         let docs_data = docs.map((doc) => doc.data());
 
         this.setState({
           ids: docs.map((doc) => doc.id),
-          weatherData: docs_data.map((data) => (data["temp"] - 273.15).toFixed(0)),
-          feelsLikeData: docs_data.map((data) => (data["feels_like"] - 273.15).toFixed(0)),
+          weatherData: docs_data.map((data) =>
+            (data["temp"] - 273.15).toFixed(0)
+          ),
+          feelsLikeData: docs_data.map((data) =>
+            (data["feels_like"] - 273.15).toFixed(0)
+          ),
           icons: docs_data.map((data) => data["icon"]),
           humidityData: docs_data.map((data) => data["humidity"]),
           windSpeedData: docs_data.map((data) => data["wind_speed"]),
           windDegData: docs_data.map((data) => data["wind_deg"]),
         });
       });
-
   }
 
   render() {
-
     if (
       this.state.ids.length === 0 ||
       this.state.feelsLikeData.length === 0 ||
@@ -58,7 +59,11 @@ class Weather extends React.Component {
       return (
         <div className="content">
           <Row>
-            <Col xs="12" className="text-center" style={{ paddingTop: "30%", paddingLeft: "50%" }}>
+            <Col
+              xs="12"
+              className="text-center"
+              style={{ paddingTop: "30%", paddingLeft: "50%" }}
+            >
               <PropagateLoader color={"#1E8AF7"} />
             </Col>
           </Row>
@@ -69,13 +74,13 @@ class Weather extends React.Component {
       <div className="content">
         <LineChart
           title="Weather"
-          subtitle="Braga - Semana 13/04"
+          subtitle="Braga, Portugal"
           labels={this.state.ids}
           weatherData={this.state.weatherData}
           feelsLikeData={this.state.feelsLikeData}
         />
         <Row>
-          <WeatherTable 
+          <WeatherTable
             labels={this.state.ids}
             icons={this.state.icons}
             humidityData={this.state.humidityData}
