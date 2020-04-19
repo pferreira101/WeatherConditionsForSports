@@ -4,6 +4,7 @@ import React from "react";
 import { Row, Col } from "reactstrap";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import LineChart from "components/Ultraviolet/LineChart.js";
+import UVTable from "components/Ultraviolet/UVTable.js";
 
 // firestore
 import firebase from "firebase/firestore.js";
@@ -58,6 +59,48 @@ let oneInfoPerDay = (docsId, docsData) => {
   };
 };
 
+let onlySunValues = (ids, st1, st2, st3, st4, st5, st6) => {
+  let sunvaluesIds = [];
+  let sunvalues1 = [];
+  let sunvalues2 = [];
+  let sunvalues3 = [];
+  let sunvalues4 = [];
+  let sunvalues5 = [];
+  let sunvalues6 = [];
+
+  let i;
+  for (i = 0; i < st1.length; i++) {
+    if (st1[i] == "None" && st1[i + 1] != "None") {
+      sunvaluesIds.push("-");
+      sunvalues1.push("-");
+      sunvalues2.push("-");
+      sunvalues3.push("-");
+      sunvalues4.push("-");
+      sunvalues5.push("-");
+      sunvalues6.push("-");
+    }
+    if (st1[i] != "None") {
+      sunvaluesIds.push(ids[i]);
+      sunvalues1.push(st1[i]);
+      sunvalues2.push(st2[i]);
+      sunvalues3.push(st3[i]);
+      sunvalues4.push(st4[i]);
+      sunvalues5.push(st5[i]);
+      sunvalues6.push(st6[i]);
+    }
+  }
+
+  return {
+    array0: sunvaluesIds,
+    array1: sunvalues1,
+    array2: sunvalues2,
+    array3: sunvalues3,
+    array4: sunvalues4,
+    array5: sunvalues5,
+    array6: sunvalues6,
+  };
+};
+
 class Ultraviolet extends React.Component {
   constructor(props) {
     super(props);
@@ -67,6 +110,13 @@ class Ultraviolet extends React.Component {
       uvData: [],
       idsUvMax: [],
       uvMaxData: [],
+      idsSt: [],
+      st1: [],
+      st2: [],
+      st3: [],
+      st4: [],
+      st5: [],
+      st6: [],
     };
 
     this.getUVData();
@@ -81,18 +131,36 @@ class Ultraviolet extends React.Component {
         let docs = querySnapshot.docs.slice(-24);
         let docs_data = docs.map((doc) => doc.data());
 
+        let ids = docs.map((doc) => doc.id);
+
         let docsWeek = querySnapshot.docs.slice(-168); // 24 x 7
         let docsWeek_ids = docsWeek.map((doc) => doc.id);
         let docsWeek_data = docsWeek.map((doc) => doc.data());
         docsWeek_data = docsWeek_data.map((data) => data["uv_max"]);
 
-        let result = oneInfoPerDay(docsWeek_ids, docsWeek_data);
+        let result1 = oneInfoPerDay(docsWeek_ids, docsWeek_data);
+
+        let st1 = docs_data.map((data) => data["st1"]);
+        let st2 = docs_data.map((data) => data["st2"]);
+        let st3 = docs_data.map((data) => data["st3"]);
+        let st4 = docs_data.map((data) => data["st4"]);
+        let st5 = docs_data.map((data) => data["st5"]);
+        let st6 = docs_data.map((data) => data["st6"]);
+
+        let result2 = onlySunValues(ids, st1, st2, st3, st4, st5, st6);
 
         this.setState({
-          idsUv: docs.map((doc) => doc.id),
+          idsUv: ids,
           uvData: docs_data.map((data) => data["uv"]),
-          idsUvMax: result.array1,
-          uvMaxData: result.array2,
+          idsUvMax: result1.array1,
+          uvMaxData: result1.array2,
+          idsSt: result2.array0,
+          st1: result2.array1,
+          st2: result2.array2,
+          st3: result2.array3,
+          st4: result2.array4,
+          st5: result2.array5,
+          st6: result2.array6,
         });
       });
   }
@@ -120,14 +188,32 @@ class Ultraviolet extends React.Component {
     }
     return (
       <div className="content">
-        <LineChart
-          title="UV Index"
-          subtitle="Braga, Portugal"
-          idsUv={this.state.idsUv}
-          uvData={this.state.uvData}
-          idsUvMax={this.state.idsUvMax}
-          uvMaxData={this.state.uvMaxData}
-        />
+        <Row>
+          <Col xs="12">
+            <LineChart
+              title="UV Index"
+              subtitle="Braga, Portugal"
+              idsUv={this.state.idsUv}
+              uvData={this.state.uvData}
+              idsUvMax={this.state.idsUvMax}
+              uvMaxData={this.state.uvMaxData}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg="8">
+            <UVTable
+              labels={this.state.idsSt}
+              st1={this.state.st1}
+              st2={this.state.st2}
+              st3={this.state.st3}
+              st4={this.state.st4}
+              st5={this.state.st5}
+              st6={this.state.st6}
+            />
+          </Col>
+          <Col lg="4"></Col>
+        </Row>
       </div>
     );
   }
