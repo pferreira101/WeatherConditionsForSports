@@ -70,7 +70,7 @@ let onlySunValues = (ids, st1, st2, st3, st4, st5, st6) => {
 
   let i;
   for (i = 0; i < st1.length; i++) {
-    if (st1[i] == "None" && st1[i + 1] != "None") {
+    if (st1[i] === "None" && st1[i + 1] !== "None") {
       sunvaluesIds.push("-");
       sunvalues1.push("-");
       sunvalues2.push("-");
@@ -79,7 +79,7 @@ let onlySunValues = (ids, st1, st2, st3, st4, st5, st6) => {
       sunvalues5.push("-");
       sunvalues6.push("-");
     }
-    if (st1[i] != "None") {
+    if (st1[i] !== "None") {
       sunvaluesIds.push(ids[i]);
       sunvalues1.push(st1[i]);
       sunvalues2.push(st2[i]);
@@ -201,7 +201,7 @@ class Ultraviolet extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col lg="8">
+          <Col lg="9">
             <UVTable
               labels={this.state.idsSt}
               st1={this.state.st1}
@@ -212,7 +212,22 @@ class Ultraviolet extends React.Component {
               st6={this.state.st6}
             />
           </Col>
-          <Col lg="4"></Col>
+          <Col lg="3">
+            <Row>
+              <img
+                height="95%"
+                width="95%"
+                src={require("assets/img/tfs1.png")}
+              />
+            </Row>
+            <Row>
+              <img
+                height="95%"
+                width="95%"
+                src={require("assets/img/tfs2.png")}
+              />
+            </Row>
+          </Col>
         </Row>
       </div>
     );

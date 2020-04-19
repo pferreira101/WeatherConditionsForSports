@@ -1,7 +1,15 @@
 import React from "react";
 
 // reactstrap components
-import { Card, CardHeader, CardBody, CardTitle, Col, Table } from "reactstrap";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardTitle,
+  Col,
+  Table,
+  Row,
+} from "reactstrap";
 
 let formatLabels = (docs_ids) => {
   return docs_ids.map((id) => {
@@ -37,75 +45,77 @@ class UVTable extends React.Component {
   }
   render() {
     return (
-      <Col md="12">
-        <Card>
-          <CardHeader>
-            <CardTitle tag="h3">STs</CardTitle>
-          </CardHeader>
-          <CardBody>
-            <Table className="tablesorter" responsive>
-              <thead className="text-primary">
-                <tr>
-                  <th></th>
-                  {this.state.labels.map((label) => (
-                    <th className="text-secondary text-center"> {label}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th className="text-secondary text-center" scope="row">
-                    St1
-                  </th>
-                  {this.state.st1.map((value) => (
-                    <td className="text-center">{`${value}`}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th className="text-secondary text-center" scope="row">
-                    St2
-                  </th>
-                  {this.state.st2.map((value) => (
-                    <td className="text-center">{`${value}`}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th className="text-secondary text-center" scope="row">
-                    St3
-                  </th>
-                  {this.state.st3.map((value) => (
-                    <td className="text-center">{`${value}`}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th className="text-secondary text-center" scope="row">
-                    St4
-                  </th>
-                  {this.state.st4.map((value) => (
-                    <td className="text-center">{`${value}`}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th className="text-secondary text-center" scope="row">
-                    St5
-                  </th>
-                  {this.state.st5.map((value) => (
-                    <td className="text-center">{`${value}`}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th className="text-secondary text-center" scope="row">
-                    St6
-                  </th>
-                  {this.state.st6.map((value) => (
-                    <td className="text-center">{`${value}`}</td>
-                  ))}
-                </tr>
-              </tbody>
-            </Table>
-          </CardBody>
-        </Card>
-      </Col>
+      <Row>
+        <Col md="12">
+          <Card>
+            <CardHeader>
+              <CardTitle tag="h4">Safe exposure time per type (min)</CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Table className="tablesorter" responsive>
+                <thead className="text-primary">
+                  <tr>
+                    <th>Type</th>
+                    {this.state.labels.map((label) => (
+                      <th className="text-secondary text-center"> {label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th className="text-secondary text-center" scope="row">
+                      I
+                    </th>
+                    {this.state.st1.map((value) => (
+                      <td className="text-center">{`${value}`}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th className="text-secondary text-center" scope="row">
+                      II
+                    </th>
+                    {this.state.st2.map((value) => (
+                      <td className="text-center">{`${value}`}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th className="text-secondary text-center" scope="row">
+                      III
+                    </th>
+                    {this.state.st3.map((value) => (
+                      <td className="text-center">{`${value}`}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th className="text-secondary text-center" scope="row">
+                      IV
+                    </th>
+                    {this.state.st4.map((value) => (
+                      <td className="text-center">{`${value}`}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th className="text-secondary text-center" scope="row">
+                      V
+                    </th>
+                    {this.state.st5.map((value) => (
+                      <td className="text-center">{`${value}`}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th className="text-secondary text-center" scope="row">
+                      VI
+                    </th>
+                    {this.state.st6.map((value) => (
+                      <td className="text-center">{`${value}`}</td>
+                    ))}
+                  </tr>
+                </tbody>
+              </Table>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
     );
   }
 }

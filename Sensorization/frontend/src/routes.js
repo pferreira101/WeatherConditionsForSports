@@ -18,8 +18,6 @@
 import Weather from "views/Weather.js";
 import Ultraviolet from "views/Ultraviolet.js";
 import BestPractice from "views/BestPractice.js";
-import Map from "views/Map.js";
-import TableList from "views/TableList.js";
 
 var routes = [
   {
@@ -41,20 +39,6 @@ var routes = [
     name: "Best Practice Time",
     icon: "tim-icons icon-user-run",
     component: BestPractice,
-    layout: "/admin",
-  },
-  {
-    path: "/map",
-    name: "Map",
-    icon: "tim-icons icon-map-big",
-    component: Map,
-    layout: "/admin",
-  },
-  {
-    path: "/tables",
-    name: "Table List",
-    icon: "tim-icons icon-puzzle-10",
-    component: TableList,
     layout: "/admin",
   },
 ];
