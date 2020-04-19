@@ -121,7 +121,7 @@ class Ultraviolet extends React.Component {
     return (
       <div className="content">
         <LineChart
-          title="Ultraviolet Radiation"
+          title="UV Index"
           subtitle="Braga, Portugal"
           idsUv={this.state.idsUv}
           uvData={this.state.uvData}

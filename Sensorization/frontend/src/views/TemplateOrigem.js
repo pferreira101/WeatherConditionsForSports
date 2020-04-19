@@ -74,8 +74,8 @@ let chart1_2_options = {
           zeroLineColor: "transparent",
         },
         ticks: {
-          suggestedMin: 270,
-          suggestedMax: 290,
+          suggestedMin: 0,
+          suggestedMax: 30,
           padding: 20,
           fontColor: "#9a9a9a",
         },
@@ -104,12 +104,41 @@ let weatherChart = {
 
     let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-    gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-    gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-    gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
+    gradientStroke.addColorStop(1, "rgba(66,134,121,0.15)");
+    gradientStroke.addColorStop(0.4, "rgba(66,134,121,0.0)"); //green colors
+    gradientStroke.addColorStop(0, "rgba(66,134,121,0)"); //green colors
 
     return {
-      labels: ids,
+      labels: [
+        "M06",
+        "M12",
+        "M18",
+        "M24",
+        "T06",
+        "T12",
+        "T18",
+        "T24",
+        "W06",
+        "W12",
+        "W18",
+        "W24",
+        "T06",
+        "T12",
+        "T18",
+        "T24",
+        "F06",
+        "F12",
+        "F18",
+        "F24",
+        "S06",
+        "S12",
+        "S18",
+        "S24",
+        "S06",
+        "S12",
+        "S18",
+        "S24",
+      ],
       datasets: [
         {
           label: "(ºC)",
@@ -126,7 +155,36 @@ let weatherChart = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: feelsLikeData,
+          data: [
+            6,
+            15,
+            14,
+            10,
+            18,
+            24,
+            18,
+            15,
+            25,
+            35,
+            20,
+            18,
+            10,
+            13,
+            16,
+            12,
+            6,
+            8,
+            10,
+            3,
+            10,
+            20,
+            19,
+            15,
+            20,
+            35,
+            30,
+            20,
+          ],
         },
       ],
     };
@@ -181,9 +239,9 @@ let weatherChart = {
 
     let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-    gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-    gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-    gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
+    gradientStroke.addColorStop(1, "rgba(66,134,121,0.15)");
+    gradientStroke.addColorStop(0.4, "rgba(66,134,121,0.0)"); //green colors
+    gradientStroke.addColorStop(0, "rgba(66,134,121,0)"); //green colors
 
     return {
       labels: [
@@ -205,13 +263,13 @@ let weatherChart = {
           label: "My First dataset",
           fill: true,
           backgroundColor: gradientStroke,
-          borderColor: "#1f8ef1",
+          borderColor: "#00d6b4",
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          pointBackgroundColor: "#1f8ef1",
+          pointBackgroundColor: "#00d6b4",
           pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#1f8ef1",
+          pointHoverBackgroundColor: "#00d6b4",
           pointBorderWidth: 20,
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
@@ -230,9 +288,9 @@ let chartExample2 = {
 
     let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-    gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-    gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-    gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
+    gradientStroke.addColorStop(1, "rgba(66,134,121,0.15)");
+    gradientStroke.addColorStop(0.4, "rgba(66,134,121,0.0)"); //green colors
+    gradientStroke.addColorStop(0, "rgba(66,134,121,0)"); //green colors
 
     return {
       labels: ids,
@@ -241,13 +299,13 @@ let chartExample2 = {
           label: "Data",
           fill: true,
           backgroundColor: gradientStroke,
-          borderColor: "#1f8ef1",
+          borderColor: "#00d6b4",
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          pointBackgroundColor: "#1f8ef1",
+          pointBackgroundColor: "#00d6b4",
           pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#1f8ef1",
+          pointHoverBackgroundColor: "#00d6b4",
           pointBorderWidth: 20,
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
@@ -263,7 +321,7 @@ let chartExample2 = {
 var ids = [];
 var feelsLikeData = [];
 
-class Climate extends React.Component {
+class BestPractice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -843,4 +901,4 @@ class Climate extends React.Component {
   }
 }
 
-export default Climate;
+export default BestPractice;

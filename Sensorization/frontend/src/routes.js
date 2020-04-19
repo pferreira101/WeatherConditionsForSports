@@ -15,7 +15,6 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Climate from "views/Climate.js";
 import Weather from "views/Weather.js";
 import Ultraviolet from "views/Ultraviolet.js";
 import BestPractice from "views/BestPractice.js";
@@ -32,16 +31,9 @@ var routes = [
   },
   {
     path: "/ultraviolet",
-    name: "Ultraviolet",
+    name: "UV Index",
     icon: "tim-icons icon-world",
     component: Ultraviolet,
-    layout: "/admin",
-  },
-  {
-    path: "/climate",
-    name: "Climate",
-    icon: "tim-icons icon-world",
-    component: Climate,
     layout: "/admin",
   },
   {
