@@ -18,6 +18,8 @@
 import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 // reactstrap components
 import {
@@ -30,7 +32,12 @@ import {
   Nav,
   Container,
   Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
 } from "reactstrap";
+
+let filtering = false;
 
 class AdminNavbar extends React.Component {
   constructor(props) {
@@ -71,6 +78,8 @@ class AdminNavbar extends React.Component {
       });
     }
     this.setState({
+      filtering: false,
+      pickedDate: false,
       collapseOpen: !this.state.collapseOpen,
     });
   };
@@ -80,6 +89,36 @@ class AdminNavbar extends React.Component {
       modalSearch: !this.state.modalSearch,
     });
   };
+
+  setDate = (date) => {
+    this.setState({
+      pickedDate: date
+    })
+  }
+
+  updateDate = () => {
+    this.toggleModalSearch()
+
+    filtering = true
+
+    if (this.props.onChange) {
+      this.props.onChange(this.state);
+    }
+
+  }
+
+  removeFilter = () => {
+    filtering = false;
+
+    this.setState({
+      pickedDate: null
+    })
+
+    if (this.props.onChange) {
+      this.props.onChange({ pickedDate: null });
+    }
+  }
+
   render() {
     return (
       <>
@@ -104,7 +143,7 @@ class AdminNavbar extends React.Component {
                   <span className="navbar-toggler-bar bar3" />
                 </button>
               </div>
-              <NavbarBrand href="/">BEST SPORTS CLIMATE</NavbarBrand>
+              <NavbarBrand href="/" style={{fontWeight: "bold", fontSize: "x-large"}}>BEST SPORTS CLIMATE</NavbarBrand>
             </div>
             <button
               aria-expanded={false}
@@ -129,10 +168,17 @@ class AdminNavbar extends React.Component {
                     data-toggle="modal"
                     id="search-button"
                     onClick={this.toggleModalSearch}
+                    style={{color:"white"}}
                   >
+                    Search specific date	&nbsp;	&nbsp;
                     <i className="tim-icons icon-zoom-split" />
-                    <span className="d-lg-none d-md-block">Search</span>
                   </Button>
+                  {filtering &&
+                    <Button color="secondary"
+                      onClick={this.removeFilter}
+                    >
+                      Remove filter
+                    </Button>}
                 </InputGroup>
                 <li className="separator d-lg-none" />
               </Nav>
@@ -140,22 +186,22 @@ class AdminNavbar extends React.Component {
           </Container>
         </Navbar>
         <Modal
-          modalClassName="modal-search"
           isOpen={this.state.modalSearch}
           toggle={this.toggleModalSearch}
         >
-          <div className="modal-header">
-            <Input id="inlineFormInputGroup" placeholder="SEARCH" type="text" />
-            <button
-              aria-label="Close"
-              className="close"
-              data-dismiss="modal"
-              type="button"
-              onClick={this.toggleModalSearch}
-            >
-              <i className="tim-icons icon-simple-remove" />
-            </button>
-          </div>
+          <ModalHeader  tag="h4" toggle={this.toggleModalSearch}>Choose a date</ModalHeader>
+          <ModalBody style={{ paddingLeft: "25%" }}>
+            <DatePicker
+              selected={this.state.pickedDate ? this.state.pickedDate : new Date()}
+              onChange={date => this.setDate(date)}
+              minDate={new Date('2020-04-04')}
+              maxDate={new Date()}
+              inline
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button style={{marginLeft: "80%" }} color="secondary" onClick={this.updateDate}>Ok</Button>
+          </ModalFooter>
         </Modal>
       </>
     );

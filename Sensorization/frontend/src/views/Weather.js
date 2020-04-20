@@ -20,6 +20,7 @@ class Weather extends React.Component {
       generalConditionData: [],
       humidityData: [],
       windData: [],
+      specificDay: this.props.date
     };
 
     this.getWeatherData();
@@ -31,7 +32,7 @@ class Weather extends React.Component {
     db.collection("WM")
       .get()
       .then((querySnapshot) => {
-        let docs = querySnapshot.docs.slice(-24);
+        let docs = querySnapshot.docs;
         let docs_data = docs.map((doc) => doc.data());
 
         this.setState({
@@ -42,10 +43,10 @@ class Weather extends React.Component {
           feelsLikeData: docs_data.map((data) =>
             (data["feels_like"] - 273.15).toFixed(0)
           ),
-          icons: docs_data.map((data) => data["icon"]),
+          icons: docs_data.map((data) => data["icon"] ? data["icon"] : '-'),
           humidityData: docs_data.map((data) => data["humidity"]),
           windSpeedData: docs_data.map((data) => data["wind_speed"]),
-          windDegData: docs_data.map((data) => data["wind_deg"]),
+          windDegData: docs_data.map((data) => data["wind_deg"] ? data["wind_deg"] : '-'),
         });
       });
   }
@@ -73,11 +74,12 @@ class Weather extends React.Component {
     return (
       <div className="content">
         <LineChart
-          title="Weather"
-          subtitle="Braga, Portugal"
+          title= {this.state.specificDay ? "Weather - " + this.state.specificDay :"Weather"}
+          subtitle= {this.state.teste ? this.state.teste : "Braga, Portugal"}
           labels={this.state.ids}
           weatherData={this.state.weatherData}
           feelsLikeData={this.state.feelsLikeData}
+          specificDay={this.state.specificDay}
         />
         <Row>
           <WeatherTable
@@ -86,6 +88,7 @@ class Weather extends React.Component {
             humidityData={this.state.humidityData}
             windSpeedData={this.state.windSpeedData}
             windDegData={this.state.windDegData}
+            specificDay={this.state.specificDay}
           />
         </Row>
       </div>

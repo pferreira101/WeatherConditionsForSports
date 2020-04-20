@@ -18,16 +18,42 @@ let formatLabels = (docs_ids) => {
   });
 };
 
+
+let getData = (specificDay, labels, icons, humidityData, windSpeedData, windDegData) => {
+
+  if (!specificDay)
+    return [formatLabels(labels.slice(-24)), icons.slice(-24), humidityData.slice(-24), windSpeedData.slice(-24), windDegData.slice(-24)]
+
+  let _labels = [], _icons = [], _humidityData = [], _windSpeedData = [], _windDegData = []
+
+  for (let i in labels) {
+    if ((new Date(labels[i])).toDateString() == specificDay) {
+      _labels.push(labels[i])
+      _icons.push(icons[i])
+      _humidityData.push(humidityData[i])
+      _windSpeedData.push(windSpeedData[i])
+      _windDegData.push(windDegData[i])
+    }
+  }
+
+  return [formatLabels(_labels), _icons, _humidityData, _windSpeedData, _windDegData]
+}
+
+
 class WeatherTable extends React.Component {
   constructor(props) {
     super(props);
 
+    let data = getData(this.props.specificDay, this.props.labels, this.props.icons, this.props.humidityData, this.props.windSpeedData, this.props.windDegData)
+    let labels = data[0], icons = data[1], humidityData = data[2], windSpeedData = data[3], windDegData = data[4]
+
     this.state = {
-      labels: formatLabels(this.props.labels),
-      icons: this.props.icons,
-      humidityData: this.props.humidityData,
-      windSpeedData: this.props.windSpeedData,
-      windDegData: this.props.windDegData,
+      labels: labels,
+      icons: icons,
+      humidityData: humidityData,
+      windSpeedData: windSpeedData,
+      windDegData: windDegData,
+      specificDay: this.props.specificDay,
     };
   }
   render() {
@@ -52,13 +78,17 @@ class WeatherTable extends React.Component {
                   <th className="text-secondary" scope="row">
                     Condition
                   </th>
-                  {this.state.icons.map((icon) => (
-                    <td>
-                      <img
-                        src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
-                      />
-                    </td>
-                  ))}
+                  {this.state.icons.map((icon) => {
+                    
+                    return icon !== '-' ?
+                      <td>
+                        <img
+                          alt=""
+                          src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
+                        />
+                      </td>
+                    : 
+                    <td text-center>-</td>})}
                 </tr>
                 <tr>
                   <th className="text-secondary text-center" scope="row">
@@ -86,13 +116,14 @@ class WeatherTable extends React.Component {
                     windDeg === "-" ? (
                       <td className="text-center">-</td>
                     ) : (
-                      <td>
-                        <img
-                          style={{ transform: `rotate(${windDeg + 90}deg)` }}
-                          src={`https://svn.apache.org/repos/asf/openoffice/symphony/trunk/main/extras/source/gallery/arrows/A07-Arrow-LightBlue-Left.png`}
-                        />
-                      </td>
-                    )
+                        <td>
+                          <img
+                            style={{ transform: `rotate(${windDeg + 90}deg)` }}
+                            alt=""
+                            src={`https://svn.apache.org/repos/asf/openoffice/symphony/trunk/main/extras/source/gallery/arrows/A07-Arrow-LightBlue-Left.png`}
+                          />
+                        </td>
+                      )
                   )}
                 </tr>
               </tbody>
