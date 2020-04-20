@@ -182,7 +182,7 @@ class LineChart extends React.Component {
                         type="radio"
                       />
                       <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                        UV/day
+                        UV/Last 24h
                       </span>
                       <span className="d-block d-sm-none">
                         <i className="tim-icons icon-single-02" />
@@ -200,7 +200,7 @@ class LineChart extends React.Component {
                     >
                       <input className="d-none" name="options" type="radio" />
                       <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                        UV Max/week
+                        UV Max/Last Week
                       </span>
                       <span className="d-block d-sm-none">
                         <i className="tim-icons icon-gift-2" />

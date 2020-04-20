@@ -34,7 +34,7 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
 } from "reactstrap";
 
 let filtering = false;
@@ -92,32 +92,31 @@ class AdminNavbar extends React.Component {
 
   setDate = (date) => {
     this.setState({
-      pickedDate: date
-    })
-  }
+      pickedDate: date,
+    });
+  };
 
   updateDate = () => {
-    this.toggleModalSearch()
+    this.toggleModalSearch();
 
-    filtering = true
+    filtering = true;
 
     if (this.props.onChange) {
       this.props.onChange(this.state);
     }
-
-  }
+  };
 
   removeFilter = () => {
     filtering = false;
 
     this.setState({
-      pickedDate: null
-    })
+      pickedDate: null,
+    });
 
     if (this.props.onChange) {
       this.props.onChange({ pickedDate: null });
     }
-  }
+  };
 
   render() {
     return (
@@ -143,7 +142,12 @@ class AdminNavbar extends React.Component {
                   <span className="navbar-toggler-bar bar3" />
                 </button>
               </div>
-              <NavbarBrand href="/" style={{fontWeight: "bold", fontSize: "x-large"}}>BEST SPORTS CLIMATE</NavbarBrand>
+              <NavbarBrand
+                href="/"
+                style={{ fontWeight: "bold", fontSize: "large" }}
+              >
+                Weather Conditions for Sports
+              </NavbarBrand>
             </div>
             <button
               aria-expanded={false}
@@ -168,39 +172,45 @@ class AdminNavbar extends React.Component {
                     data-toggle="modal"
                     id="search-button"
                     onClick={this.toggleModalSearch}
-                    style={{color:"white"}}
+                    style={{ color: "white" }}
                   >
-                    Search specific date	&nbsp;	&nbsp;
+                    Search specific date &nbsp; &nbsp;
                     <i className="tim-icons icon-zoom-split" />
                   </Button>
-                  {filtering &&
-                    <Button color="secondary"
-                      onClick={this.removeFilter}
-                    >
+                  {filtering && (
+                    <Button color="secondary" onClick={this.removeFilter}>
                       Remove filter
-                    </Button>}
+                    </Button>
+                  )}
                 </InputGroup>
                 <li className="separator d-lg-none" />
               </Nav>
             </Collapse>
           </Container>
         </Navbar>
-        <Modal
-          isOpen={this.state.modalSearch}
-          toggle={this.toggleModalSearch}
-        >
-          <ModalHeader  tag="h4" toggle={this.toggleModalSearch}>Choose a date</ModalHeader>
+        <Modal isOpen={this.state.modalSearch} toggle={this.toggleModalSearch}>
+          <ModalHeader tag="h4" toggle={this.toggleModalSearch}>
+            Choose a date
+          </ModalHeader>
           <ModalBody style={{ paddingLeft: "25%" }}>
             <DatePicker
-              selected={this.state.pickedDate ? this.state.pickedDate : new Date()}
-              onChange={date => this.setDate(date)}
-              minDate={new Date('2020-04-04')}
+              selected={
+                this.state.pickedDate ? this.state.pickedDate : new Date()
+              }
+              onChange={(date) => this.setDate(date)}
+              minDate={new Date("2020-04-04")}
               maxDate={new Date()}
               inline
             />
           </ModalBody>
           <ModalFooter>
-            <Button style={{marginLeft: "80%" }} color="secondary" onClick={this.updateDate}>Ok</Button>
+            <Button
+              style={{ marginLeft: "80%" }}
+              color="secondary"
+              onClick={this.updateDate}
+            >
+              Ok
+            </Button>
           </ModalFooter>
         </Modal>
       </>

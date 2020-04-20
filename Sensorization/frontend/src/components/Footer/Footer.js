@@ -28,7 +28,7 @@ class Footer extends React.Component {
     return (
       <footer className="footer">
         <Container fluid>
-          <div className="copyright">By Grupo 7 for a better Health.</div>
+          <div className="copyright">By Grupo 10 for a better Health.</div>
         </Container>
       </footer>
     );
