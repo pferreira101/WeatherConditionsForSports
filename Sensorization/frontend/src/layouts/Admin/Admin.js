@@ -24,7 +24,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-
+import Weather from "views/Weather.js";
 import routes from "routes.js";
 
 var ps;
@@ -79,16 +79,34 @@ class Admin extends React.Component {
     this.setState({ sidebarOpened: !this.state.sidebarOpened });
   };
 
+  onPickedDateChange = (navBarState) => {
+    console.log(navBarState)
+    this.setState({
+      pickedDate: navBarState.pickedDate ? navBarState.pickedDate.toDateString() : null,
+    });
+
+  }
+
   getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
+        if (prop.name === "Weather") {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={() => <Weather date={this.state.pickedDate}/>}
+              key={key}
+            />
+          );
+        }
+        else
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={prop.component}
+              key={key}
+            />
+          );
       } else {
         return null;
       }
@@ -132,6 +150,7 @@ class Admin extends React.Component {
               brandText={this.getBrandText(this.props.location.pathname)}
               toggleSidebar={this.toggleSidebar}
               sidebarOpened={this.state.sidebarOpened}
+              onChange={this.onPickedDateChange}
             />
             <Switch>
               {this.getRoutes(routes)}
