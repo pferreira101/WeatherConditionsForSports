@@ -29,6 +29,46 @@ let formatLabels = (docs_ids) => {
   });
 };
 
+const getLabels = (displayMode, labelsUv, labelsUvMax) => {
+  console.log("aqui")
+  if (specificDay){
+    console.log("aqui 2 " + specificDay)
+    return getSpecificLabels(labelsUv);
+  }
+
+  console.log("aqui 3 " + specificDay)
+
+  if (displayMode === "uv") return formatLabels(labelsUv.slice(-24));
+  else return labelsUvMax;
+}
+
+let getSpecificLabels = (labels) => {
+  let specificLabels = labels.filter((label) => (new Date(label)).toDateString() === specificDay)
+  return formatLabels(specificLabels);
+}
+
+let getDataToDisplay = (displayMode, uv, uvMax) => {
+
+  if(specificDay)
+    return getSpecificData(uv)
+
+  if (displayMode === "uv") return uv.slice(-24);
+
+  else return uvMax;
+};
+
+let getSpecificData = (uv) => {
+
+  let data = []
+  for(let i in labelsUv){
+    if((new Date(labelsUv[i])).toDateString() == specificDay){
+      data.push(uv[i]);
+    }
+  }
+  return data;
+}
+
+
 let lineChartOptions = {
   maintainAspectRatio: false,
   legend: {
@@ -88,7 +128,7 @@ let uvChart = (canvas) => {
   gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
 
   return {
-    labels: displayLabel === "uv" ? [...labelsUv] : [...labelsUvMax],
+    labels: getLabels(displayMode, labelsUv, labelsUvMax),
     datasets: [
       {
         label: "(UV)",
@@ -105,7 +145,7 @@ let uvChart = (canvas) => {
         pointHoverRadius: 4,
         pointHoverBorderWidth: 15,
         pointRadius: 4,
-        data: displayData === "uv" ? [...uv] : [...uvMax],
+        data: getDataToDisplay(displayMode, uv, uvMax),
       },
     ],
   };
@@ -115,8 +155,8 @@ let labelsUv = [];
 let labelsUvMax = [];
 let uv = [];
 let uvMax = [];
-let displayData = "";
-let displayLabel = "";
+let displayMode = "";
+let specificDay;
 
 class LineChart extends React.Component {
   constructor(props) {
@@ -125,28 +165,26 @@ class LineChart extends React.Component {
     this.state = {
       title: this.props.title,
       subtitle: this.props.subtitle,
-      labelsUv: formatLabels(this.props.idsUv),
+      labelsUv: this.props.idsUv,
       labelsUvMax: this.props.idsUvMax,
       uv: this.props.uvData,
       uvMax: this.props.uvMaxData,
-      displayLabel: "uv",
-      displayData: "uv",
+      displayMode: "uv",
+      specificDay: this.props.specificDay,
     };
     labelsUv = this.state.labelsUv;
     labelsUvMax = this.state.labelsUvMax;
     uv = this.state.uv;
     uvMax = this.state.uvMax;
-    displayLabel = "uv";
-    displayData = "uv";
+    displayMode = "uv";
+    specificDay = this.state.specificDay;
   }
 
-  setDisplayData = (name) => {
+  setDisplayMode = (name) => {
     this.setState({
-      displayData: name,
-      displayLabel: name,
+      displayMode: name,
     });
-    displayData = name;
-    displayLabel = name;
+    displayMode = name;
   };
 
   render() {
@@ -168,12 +206,12 @@ class LineChart extends React.Component {
                     <Button
                       tag="label"
                       className={classNames("btn-simple", {
-                        active: this.state.displayData === "uv",
+                        active: this.state.displayMode === "uv",
                       })}
                       color="info"
                       id="0"
                       size="sm"
-                      onClick={() => this.setDisplayData("uv")}
+                      onClick={() => this.setDisplayMode("uv")}
                     >
                       <input
                         defaultChecked
@@ -194,9 +232,9 @@ class LineChart extends React.Component {
                       size="sm"
                       tag="label"
                       className={classNames("btn-simple", {
-                        active: this.state.displayData === "uvmax",
+                        active: this.state.displayMode === "uvmax",
                       })}
-                      onClick={() => this.setDisplayData("uvmax")}
+                      onClick={() => this.setDisplayMode("uvmax")}
                     >
                       <input className="d-none" name="options" type="radio" />
                       <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">

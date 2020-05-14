@@ -75,7 +75,7 @@ class Weather extends React.Component {
       <div className="content">
         <LineChart
           title= {this.state.specificDay ? "Weather - " + this.state.specificDay :"Weather"}
-          subtitle= {this.state.teste ? this.state.teste : "Braga, Portugal"}
+          subtitle= {"Braga, Portugal"}
           labels={this.state.ids}
           weatherData={this.state.weatherData}
           feelsLikeData={this.state.feelsLikeData}

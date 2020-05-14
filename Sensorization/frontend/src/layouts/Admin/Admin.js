@@ -25,6 +25,7 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import Weather from "views/Weather.js";
+import Ultraviolet from "views/Ultraviolet.js"
 import routes from "routes.js";
 
 var ps;
@@ -80,7 +81,6 @@ class Admin extends React.Component {
   };
 
   onPickedDateChange = (navBarState) => {
-    console.log(navBarState)
     this.setState({
       pickedDate: navBarState.pickedDate ? navBarState.pickedDate.toDateString() : null,
     });
@@ -95,6 +95,15 @@ class Admin extends React.Component {
             <Route
               path={prop.layout + prop.path}
               component={() => <Weather date={this.state.pickedDate}/>}
+              key={key}
+            />
+          );
+        }
+        else if (prop.name === "Ultraviolet") {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={() => <Ultraviolet date={this.state.pickedDate}/>}
               key={key}
             />
           );

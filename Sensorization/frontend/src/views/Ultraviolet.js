@@ -15,47 +15,19 @@ let oneInfoPerDay = (docsId, docsData) => {
 
   let i;
   for (i = 0; i < docsId.length; i++) {
-    let date = new Date(docsId[i]);
+    let date = (new Date(docsId[i])).toDateString();
 
-    let day = date.getDate().toString();
-    let month = date.getMonth() + 1;
-    month = month.toString();
-    let dayofweek = date.getDay().toString();
-
-    switch (dayofweek) {
-      case "0":
-        dayofweek = "SUN";
-        break;
-      case "1":
-        dayofweek = "MON";
-        break;
-      case "2":
-        dayofweek = "TUE";
-        break;
-      case "3":
-        dayofweek = "WED";
-        break;
-      case "4":
-        dayofweek = "THU";
-        break;
-      case "5":
-        dayofweek = "FRI";
-        break;
-      case "6":
-        dayofweek = "SAT";
-        break;
-    }
-
-    let key = dayofweek.concat("-", day, "/", month);
-
-    if (!infoWeekDay.includes(key)) {
-      infoWeekDay.push(key);
+    if (!infoWeekDay.includes(date)) {
+      infoWeekDay.push(date);
       infoWeekUVMax.push(docsData[i]);
+    }
+    else if(docsData[i] > infoWeekUVMax[infoWeekUVMax.length-1]){ // alguns dias tem variacoes no max uv
+      infoWeekUVMax[infoWeekUVMax.length-1] = docsData[i];
     }
   }
   return {
-    array1: infoWeekDay,
-    array2: infoWeekUVMax,
+    array1: infoWeekDay.slice(-8, -1),
+    array2: infoWeekUVMax.slice(-8, -1),
   };
 };
 
@@ -117,6 +89,7 @@ class Ultraviolet extends React.Component {
       st4: [],
       st5: [],
       st6: [],
+      specificDay: this.props.date,
     };
 
     this.getUVData();
@@ -128,12 +101,12 @@ class Ultraviolet extends React.Component {
     db.collection("UV")
       .get()
       .then((querySnapshot) => {
-        let docs = querySnapshot.docs.slice(-24);
+        let docs = querySnapshot.docs;
         let docs_data = docs.map((doc) => doc.data());
 
         let ids = docs.map((doc) => doc.id);
 
-        let docsWeek = querySnapshot.docs.slice(-168); // 24 x 7
+        let docsWeek = querySnapshot.docs.slice(-192); // 24 x 8 (mostrar os ultimos 7 dias e excluir o dia atual)
         let docsWeek_ids = docsWeek.map((doc) => doc.id);
         let docsWeek_data = docsWeek.map((doc) => doc.data());
         docsWeek_data = docsWeek_data.map((data) => data["uv_max"]);
@@ -191,12 +164,13 @@ class Ultraviolet extends React.Component {
         <Row>
           <Col xs="12">
             <LineChart
-              title="UV Index"
+              title= {this.state.specificDay ? "UV Index - " + this.state.specificDay :"UV Index"}
               subtitle="Braga, Portugal"
               idsUv={this.state.idsUv}
               uvData={this.state.uvData}
               idsUvMax={this.state.idsUvMax}
               uvMaxData={this.state.uvMaxData}
+              specificDay={this.state.specificDay}
             />
           </Col>
         </Row>
@@ -210,6 +184,7 @@ class Ultraviolet extends React.Component {
               st4={this.state.st4}
               st5={this.state.st5}
               st6={this.state.st6}
+              specificDay={this.state.specificDay}
             />
           </Col>
           <Col lg="3">

@@ -29,7 +29,7 @@ var routes = [
   },
   {
     path: "/ultraviolet",
-    name: "UV Index",
+    name: "Ultraviolet",
     icon: "tim-icons icon-world",
     component: Ultraviolet,
     layout: "/admin",

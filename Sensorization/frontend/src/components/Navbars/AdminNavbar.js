@@ -144,9 +144,9 @@ class AdminNavbar extends React.Component {
               </div>
               <NavbarBrand
                 href="/"
-                style={{ fontWeight: "bold", fontSize: "large" }}
+                style={{ fontWeight: "bold", fontSize: "large", marginLeft: 0, marginRight: 0,  textAlign: "center"  }}
               >
-                Weather Conditions for Sports
+                Weather Conditions <br /> for Sports
               </NavbarBrand>
             </div>
             <button
@@ -174,7 +174,7 @@ class AdminNavbar extends React.Component {
                     onClick={this.toggleModalSearch}
                     style={{ color: "white" }}
                   >
-                    Search specific date &nbsp; &nbsp;
+                    { this.state.pickedDate ?  (this.state.pickedDate).toDateString() : "Search specific date " } &nbsp;  &nbsp; &nbsp;
                     <i className="tim-icons icon-zoom-split" />
                   </Button>
                   {filtering && (
