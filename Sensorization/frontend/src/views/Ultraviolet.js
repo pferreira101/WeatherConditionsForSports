@@ -31,47 +31,6 @@ let oneInfoPerDay = (docsId, docsData) => {
   };
 };
 
-let onlySunValues = (ids, st1, st2, st3, st4, st5, st6) => {
-  let sunvaluesIds = [];
-  let sunvalues1 = [];
-  let sunvalues2 = [];
-  let sunvalues3 = [];
-  let sunvalues4 = [];
-  let sunvalues5 = [];
-  let sunvalues6 = [];
-
-  let i;
-  for (i = 0; i < st1.length; i++) {
-    if (st1[i] === "None" && st1[i + 1] !== "None") {
-      sunvaluesIds.push("-");
-      sunvalues1.push("-");
-      sunvalues2.push("-");
-      sunvalues3.push("-");
-      sunvalues4.push("-");
-      sunvalues5.push("-");
-      sunvalues6.push("-");
-    }
-    if (st1[i] !== "None") {
-      sunvaluesIds.push(ids[i]);
-      sunvalues1.push(st1[i]);
-      sunvalues2.push(st2[i]);
-      sunvalues3.push(st3[i]);
-      sunvalues4.push(st4[i]);
-      sunvalues5.push(st5[i]);
-      sunvalues6.push(st6[i]);
-    }
-  }
-
-  return {
-    array0: sunvaluesIds,
-    array1: sunvalues1,
-    array2: sunvalues2,
-    array3: sunvalues3,
-    array4: sunvalues4,
-    array5: sunvalues5,
-    array6: sunvalues6,
-  };
-};
 
 class Ultraviolet extends React.Component {
   constructor(props) {
@@ -120,20 +79,19 @@ class Ultraviolet extends React.Component {
         let st5 = docs_data.map((data) => data["st5"]);
         let st6 = docs_data.map((data) => data["st6"]);
 
-        let result2 = onlySunValues(ids, st1, st2, st3, st4, st5, st6);
 
         this.setState({
           idsUv: ids,
           uvData: docs_data.map((data) => data["uv"]),
           idsUvMax: result1.array1,
           uvMaxData: result1.array2,
-          idsSt: result2.array0,
-          st1: result2.array1,
-          st2: result2.array2,
-          st3: result2.array3,
-          st4: result2.array4,
-          st5: result2.array5,
-          st6: result2.array6,
+          idsSt: ids,
+          st1: st1,
+          st2: st2,
+          st3: st3,
+          st4: st4,
+          st5: st5,
+          st6: st6,
         });
       });
   }

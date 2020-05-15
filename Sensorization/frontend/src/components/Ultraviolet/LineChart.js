@@ -30,13 +30,10 @@ let formatLabels = (docs_ids) => {
 };
 
 const getLabels = (displayMode, labelsUv, labelsUvMax) => {
-  console.log("aqui")
   if (specificDay){
-    console.log("aqui 2 " + specificDay)
     return getSpecificLabels(labelsUv);
   }
 
-  console.log("aqui 3 " + specificDay)
 
   if (displayMode === "uv") return formatLabels(labelsUv.slice(-24));
   else return labelsUvMax;
@@ -199,7 +196,7 @@ class LineChart extends React.Component {
                   <CardTitle tag="h2">{this.state.title}</CardTitle>
                 </Col>
                 <Col sm="6">
-                  <ButtonGroup
+                  {!specificDay && <ButtonGroup
                     className="btn-group-toggle float-right"
                     data-toggle="buttons"
                   >
@@ -244,7 +241,7 @@ class LineChart extends React.Component {
                         <i className="tim-icons icon-gift-2" />
                       </span>
                     </Button>
-                  </ButtonGroup>
+                  </ButtonGroup>}
                 </Col>
               </Row>
             </CardHeader>
